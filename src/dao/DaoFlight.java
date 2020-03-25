@@ -1,18 +1,20 @@
 package dao;
 
-import airport.Airport;
-import airport.Airports;
+import flight.Arrival;
+import flight.Departure;
 import flight.Flight;
 import flight.Flights;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import seat.SeatClass;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Date;
 
 public class DaoFlight {
     /**
@@ -36,11 +38,64 @@ public class DaoFlight {
      */
 
     public static Flights addAll (String xmlFlights) throws NullPointerException {
-        return new Flights(); // stub
+        Flights flights = new Flights();
+
+        // Load the XML string into a DOM tree for ease of processing
+        // then iterate over all nodes adding each airport to our collection
+        Document docAirports = buildDomDoc (xmlFlights);
+        NodeList nodesFlights = docAirports.getElementsByTagName("Flight");
+        for (int i = 0; i < nodesFlights.getLength(); i++) {
+            Element elementFlight = (Element) nodesFlights.item(i);
+            Flight flight = buildFlight (elementFlight);
+
+            flights.add(flight);
+        }
+
+        return flights;
     }
 
     static private Flight buildFlight (Node nodeFlight) {
+//        Airplane airplane;
+        String airplane; // need to replace with Airplane
+
+        int flightDuration;
+        int number;
+
+        String departureCode;
+        String departureDate;
+        String arrivalCode;
+        String arrivalDate;
+
+        Departure departure;
+        Arrival arrival;
+        SeatClass seating;
+
+        Element elementFlight = (Element) nodeFlight;
+        airplane = elementFlight.getAttributeNode("Airplane").getValue();
+        flightDuration = Integer.parseInt(elementFlight.getAttributeNode("FlightTime").getValue());
+        number = Integer.parseInt(elementFlight.getAttributeNode("Number").getValue());
+
+        departureCode = ((Element) nodeFlight).getElementsByTagName("Departure").item(0).getFirstChild().getTextContent();
+        departureDate = ((Element) nodeFlight).getElementsByTagName("Departure").item(0).getChildNodes().item(1).getTextContent();
+
+        arrivalCode = ((Element) nodeFlight).getElementsByTagName("Arrival").item(0).getFirstChild().getTextContent();
+        arrivalDate = ((Element) nodeFlight).getElementsByTagName("Arrival").item(0).getChildNodes().item(1).getTextContent();
+
+        System.out.println("---- Parsed values ----");
+        System.out.println("Airplane: " + airplane);
+        System.out.println("FlightTime: " + flightDuration);
+        System.out.println("Number: " + number);
+        System.out.println("Departure code: " + departureCode);
+        System.out.println("Departure date: " + departureDate);
+        System.out.println("Arrival code: " + arrivalCode);
+        System.out.println("Arrival date: " + arrivalDate);
+        System.out.println("-----------------------");
+
         return new Flight(); // stub
+    }
+
+    static private Date parseDateGMT(String original) {
+        return new Date(); // stub
     }
 
     static private Document buildDomDoc (String xmlString) {

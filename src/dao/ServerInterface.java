@@ -135,8 +135,8 @@ public enum ServerInterface {
 		}
 
 		xmlFlights = result.toString();
-//		flights = DaoAirport
-		System.out.println("ServerInterface.getDepartingFlights: " + xmlFlights);
+		flights = DaoFlight.addAll(xmlFlights);
+		// System.out.println("ServerInterface.getDepartingFlights: " + xmlFlights);
 
 		return null; // stub
 	}
