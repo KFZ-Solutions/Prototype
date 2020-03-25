@@ -8,6 +8,7 @@ import java.util.Collections;
 import airport.Airport;
 import airport.Airports;
 import dao.ServerInterface;
+import utils.InputReader;
 
 /**
  * @author blake
@@ -39,5 +40,15 @@ public class Driver {
 		for (Airport airport : airports) {
 			System.out.println(airport.toString());
 		}
+
+		// Read inputs for departure airport and date
+		String[] inputs = InputReader.readDepartureAirportAndDate();
+		String departingAirport = inputs[0];
+		String departingDate = inputs[1];
+		System.out.println("Departure airport: " + inputs[0]);
+		System.out.println("Departure date: " + inputs[1]);
+
+		// Query the server for those inputs
+		ServerInterface.INSTANCE.getDepartingFlights(teamName,departingAirport, departingDate);
 	}
 }
