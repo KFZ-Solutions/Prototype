@@ -38,7 +38,7 @@ public class Driver {
 		Airports airports = ServerInterface.INSTANCE.getAirports(teamName);
 		Collections.sort(airports);
 		for (Airport airport : airports) {
-			System.out.println(airport.toString());
+			// System.out.println(airport.toString());
 		}
 
 		// Read inputs for departure airport and date
@@ -49,6 +49,6 @@ public class Driver {
 		System.out.println("Departure date: " + inputs[1]);
 
 		// Query the server for those inputs
-		ServerInterface.INSTANCE.getDepartingFlights(teamName,departingAirport, departingDate);
+		ServerInterface.INSTANCE.getDepartingFlights(teamName, departingAirport, departingDate);
 	}
 }

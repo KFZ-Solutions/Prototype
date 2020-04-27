@@ -91,6 +91,8 @@ public class DaoFlight {
         System.out.println("Arrival date: " + arrivalDate);
         System.out.println("-----------------------");
 
+
+
         return new Flight(); // stub
     }
 

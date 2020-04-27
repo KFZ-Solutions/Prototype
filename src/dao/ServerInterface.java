@@ -3,18 +3,17 @@
  */
 package dao;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import airplane.Airplanes;
+import airport.Airports;
+import flight.Arrival;
+import flight.Departure;
+import flight.Flights;
+import trip.Trip;
+import utils.QueryFactory;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import airport.Airports;
-import flight.Flight;
-import flight.Flights;
-import utils.QueryFactory;
 
 
 /**
@@ -139,6 +138,32 @@ public enum ServerInterface {
 		// System.out.println("ServerInterface.getDepartingFlights: " + xmlFlights);
 
 		return null; // stub
+	}
+
+	/**
+	 * This method will get the details of airplanes which includes available seating
+	 */
+	public Airplanes getAirplaneDetails() {
+		return null; // stub
+	}
+
+	/**
+	 * This method will take departure and arrival and find the connecting flights between them
+	 * @param teamName
+	 * @param departure
+	 * @param arrival
+	 */
+	public void findConnections(String teamName, Departure departure, Arrival arrival) {
+
+	}
+
+	/**
+	 * This method will reserve a seat based on the booking object provided
+	 * @param teamName
+	 * @param booking
+	 */
+	public void reserveSeat(String teamName, Trip booking) {
+
 	}
 	
 	/**
