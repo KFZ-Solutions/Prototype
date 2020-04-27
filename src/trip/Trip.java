@@ -10,6 +10,12 @@ public class Trip {
     Flight[] connectingFlights;
     boolean oneWay;
 
+    public Trip(Date departing, Date arriving, boolean oneWay) {
+        this.departing = departing;
+        this.arriving = arriving;
+        this.oneWay = oneWay;
+    }
+
     public Trip(Date departing, Date arriving, Flight[] connectingFlights, boolean oneWay) {
         this.departing = departing;
         this.arriving = arriving;

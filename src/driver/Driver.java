@@ -8,6 +8,7 @@ import java.util.Collections;
 import airport.Airport;
 import airport.Airports;
 import dao.ServerInterface;
+import trip.Trip;
 import utils.InputReader;
 
 /**
@@ -17,6 +18,10 @@ import utils.InputReader;
  *
  */
 public class Driver {
+
+	/**
+	 * 1. Select a departure airport and arrival airport for their desired travel
+	 */
 
 	/**
 	 * Entry point for CS509 sample code driver
@@ -42,13 +47,13 @@ public class Driver {
 		}
 
 		// Read inputs for departure airport and date
-		String[] inputs = InputReader.readDepartureAirportAndDate();
-		String departingAirport = inputs[0];
-		String departingDate = inputs[1];
-		System.out.println("Departure airport: " + inputs[0]);
-		System.out.println("Departure date: " + inputs[1]);
-
-		// Query the server for those inputs
-		ServerInterface.INSTANCE.getDepartingFlights(teamName, departingAirport, departingDate);
+		Trip trip = InputReader.readTrip();
+//		String departingAirport = inputs[0];
+//		String departingDate = inputs[1];
+//		System.out.println("Departure airport: " + inputs[0]);
+//		System.out.println("Departure date: " + inputs[1]);
+//
+//		// Query the server for those inputs
+//		ServerInterface.INSTANCE.getDepartingFlights(teamName, departingAirport, departingDate);
 	}
 }

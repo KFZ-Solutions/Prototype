@@ -5,7 +5,7 @@ public class InputUtils {
      * This method will validate the user input
      * @return
      */
-    public boolean validateInput() {
+    public static boolean validateAirportInput(String airport) {
         return true; // stub
     }
 }
