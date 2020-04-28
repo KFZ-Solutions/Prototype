@@ -5,16 +5,16 @@ import airport.Airport;
 import java.util.Date;
 
 public class Arrival {
-    Airport airport;
+    String airportCode;
     Date time;
 
-    public Arrival(Airport airport, Date time) {
-        this.airport = airport;
+    public Arrival(String airport, Date time) {
+        this.airportCode = airport;
         this.time = time;
     }
 
-    public Airport getAirport() {
-        return airport;
+    public String getAirportCode() {
+        return airportCode;
     }
 
     public Date getDate() {

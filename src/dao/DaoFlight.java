@@ -15,6 +15,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DaoFlight {
@@ -38,7 +40,7 @@ public class DaoFlight {
      *     </Flights>
      */
 
-    public static Flights addAll (String xmlFlights) throws NullPointerException {
+    public static Flights addAll (String xmlFlights) throws NullPointerException, ParseException {
         Flights flights = new Flights();
 
         // Load the XML string into a DOM tree for ease of processing
@@ -55,7 +57,7 @@ public class DaoFlight {
         return flights;
     }
 
-    static private Flight buildFlight (Node nodeFlight) {
+    static private Flight buildFlight (Node nodeFlight) throws ParseException {
 //        Airplane airplane;
         String airplane; // TODO: need to replace with Airplane
 
@@ -92,10 +94,12 @@ public class DaoFlight {
         System.out.println("Arrival date: " + arrivalDate);
         System.out.println("-----------------------");
 
-//        departure = new Departure(departureCode, Date.from(departureDate));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm");
+        departure = new Departure(departureCode, sdf.parse(departureDate));
+        arrival = new Arrival(arrivalCode, sdf.parse(arrivalDate));
+        seating = new SeatClass(airplane);
 
-//        return new Flight(new Airplane(null, null, -1, -1), flightDuration, number, departure, arrival, seating); // stub
-        return null;
+        return new Flight(new Airplane(airplane), flightDuration, number, departure, arrival, seating); // stub
     }
 
     static private Date parseDateGMT(String original) {

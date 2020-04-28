@@ -8,6 +8,7 @@ import airplane.Airplanes;
 import airport.Airports;
 import flight.Arrival;
 import flight.Departure;
+import flight.Flight;
 import flight.Flights;
 import trip.Trip;
 import utils.QueryFactory;
@@ -15,6 +16,7 @@ import utils.QueryFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 
 
 /**
@@ -154,7 +156,7 @@ public enum ServerInterface {
 		StringBuffer result = new StringBuffer();
 
 		String xmlFlights;
-		Flights flights;
+		Flights flights = null;
 
 		try {
 			/**
@@ -162,6 +164,7 @@ public enum ServerInterface {
 			 * QueryFactory provides the parameter annotations for the HTTP GET query string
 			 */
 			url = new URL(mUrlBase + QueryFactory.getDepartingFlights(teamName, airportCode, day));
+			System.out.println("---- Getting departing flights for: " + airportCode + " ----");
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("User-Agent", teamName);
@@ -188,10 +191,13 @@ public enum ServerInterface {
 		}
 
 		xmlFlights = result.toString();
-		flights = DaoFlight.addAll(xmlFlights);
-		// System.out.println("ServerInterface.getDepartingFlights: " + xmlFlights);
+		try {
+			flights = DaoFlight.addAll(xmlFlights);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
-		return flights; // stub
+		return flights;
 	}
 
 	/**
@@ -200,11 +206,32 @@ public enum ServerInterface {
 	 * @param departureAirportCode
 	 * @param arrivalAirportCode
 	 */
-	public void findConnections(String teamName, String departureAirportCode, String arrivalAirportCode) {
+	public void findConnections(String teamName, String departureAirportCode, String arrivalAirportCode, String departureDate) {
 		// Get departing flights for departureAirportCode
-
+		Flights departingFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, departureAirportCode, departureDate);
+		for (Flight flight : departingFlights) {
+			String airportCode = flight.getArrival().getAirportCode();
+//			System.out.println("Airport code: " + airportCode);
+			if (arrivalAirportCode.equals(airportCode)) {
+				// We found the connection!
+				System.out.println("Connection found from " + departureAirportCode + " to " + airportCode);
+				break;
+			}
+		}
 		// If there are no departing flights matching our arrivalAirportCode as destination,
 		// check departing flights for each of the airports returned
+//		for (Flight flight : departingFlights) {
+//			String check = flight.getArrival().getAirportCode();
+//			Flights secondConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
+//			for (Flight secondFlight : secondConnectionFlights) {
+//				String airportCode = secondFlight.getArrival().getAirportCode();
+//				if (airportCode.equals(arrivalAirportCode)) {
+//					// We found the connection!
+//					System.out.println("Connection found: " + airportCode);
+//					break;
+//				}
+//			}
+//		}
 	}
 
 	/**

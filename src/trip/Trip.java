@@ -2,22 +2,21 @@ package trip;
 
 import flight.Flight;
 
-import java.util.Arrays;
 import java.util.Date;
 
 public class Trip {
     Date departureDate;
     Date returnDate;
     String departingAirportCode;
-    String returningAirportCode;
+    String arrivalAirportCode;
     Flight[] connectingFlights;
     boolean oneWay;
 
-    public Trip(Date departureDate, Date returnDate, String departingAirportCode, String returningAirportCode, boolean oneWay) {
+    public Trip(Date departureDate, Date returnDate, String departingAirportCode, String arrivalAirportCode, boolean oneWay) {
         this.departureDate = departureDate;
         this.returnDate = returnDate;
         this.departingAirportCode = departingAirportCode;
-        this.returningAirportCode = returningAirportCode;
+        this.arrivalAirportCode = arrivalAirportCode;
         this.oneWay = oneWay;
     }
 
@@ -33,8 +32,8 @@ public class Trip {
         return departingAirportCode;
     }
 
-    public String getReturningAirportCode() {
-        return returningAirportCode;
+    public String getArrivalAirportCode() {
+        return arrivalAirportCode;
     }
 
     public Flight[] getConnectingFlights() {
@@ -47,7 +46,7 @@ public class Trip {
 
     @Override
     public String toString() {
-        String trip = "Trip from " + departingAirportCode + " to " + returningAirportCode;
+        String trip = "Trip from " + departingAirportCode + " to " + arrivalAirportCode;
         if (!oneWay) {
             trip += " (returning).";
         }

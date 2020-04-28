@@ -3,8 +3,11 @@
  */
 package driver;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 
+import airplane.Airplane;
+import airplane.Airplanes;
 import airport.Airport;
 import airport.Airports;
 import dao.ServerInterface;
@@ -47,18 +50,24 @@ public class Driver {
 		Airports airports = ServerInterface.INSTANCE.getAirports(teamName);
 		Collections.sort(airports);
 		for (Airport airport : airports) {
-			// System.out.println(airport.toString());
+			 System.out.println(airport.toString());
+		}
+
+		// Try to get a list of airplanes
+		Airplanes airplanes = ServerInterface.INSTANCE.getAirplanes(teamName);
+		for (Airplane airplane : airplanes) {
+			System.out.println(airplane.toString());
 		}
 
 		// Read inputs for departure airport and date
-//		Trip trip = InputReader.readTrip();
-//		System.out.println("---- Trip details ----");
-//		System.out.println(trip.toString());
+		Trip trip = InputReader.readTrip();
+		System.out.println("---- Trip details ----");
+		System.out.println(trip.toString());
 
 		// Query the server for those inputs
 //		Airport departingAirport
 //		Departure departure = new Departure();
-//		ServerInterface.INSTANCE.findConnections();
-		ServerInterface.INSTANCE.getAirplanes(teamName);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+		ServerInterface.INSTANCE.findConnections(teamName, trip.getDepartingAirportCode(), trip.getArrivalAirportCode(), sdf.format(trip.getDepartureDate()));
 	}
 }

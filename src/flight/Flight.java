@@ -19,4 +19,28 @@ public class Flight {
         this.arrival = arrival;
         this.seating = seating;
     }
+
+    public Airplane getAirplane() {
+        return airplane;
+    }
+
+    public int getFlightDuration() {
+        return flightDuration;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public Departure getDeparture() {
+        return departure;
+    }
+
+    public Arrival getArrival() {
+        return arrival;
+    }
+
+    public SeatClass getSeating() {
+        return seating;
+    }
 }

@@ -6,6 +6,10 @@ public class Airplane {
     int firstClassSeats;
     int coachSeats;
 
+    public Airplane(String airplane) {
+        // TODO: query the airplanes database and fill in the data
+    }
+
     public Airplane(String manufacturer, String model, int firstClassSeats, int coachSeats) {
         this.manufacturer = manufacturer;
         this.model = model;
@@ -27,5 +31,15 @@ public class Airplane {
 
     public int getCoachSeats() {
         return coachSeats;
+    }
+
+    @Override
+    public String toString() {
+        return "Airplane{" +
+                "manufacturer='" + manufacturer + '\'' +
+                ", model='" + model + '\'' +
+                ", firstClassSeats=" + firstClassSeats +
+                ", coachSeats=" + coachSeats +
+                '}';
     }
 }
