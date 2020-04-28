@@ -2,33 +2,39 @@ package trip;
 
 import flight.Flight;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class Trip {
-    Date departing;
-    Date arriving;
+    Date departureDate;
+    Date returnDate;
+    String departingAirportCode;
+    String returningAirportCode;
     Flight[] connectingFlights;
     boolean oneWay;
 
-    public Trip(Date departing, Date arriving, boolean oneWay) {
-        this.departing = departing;
-        this.arriving = arriving;
+    public Trip(Date departureDate, Date returnDate, String departingAirportCode, String returningAirportCode, boolean oneWay) {
+        this.departureDate = departureDate;
+        this.returnDate = returnDate;
+        this.departingAirportCode = departingAirportCode;
+        this.returningAirportCode = returningAirportCode;
         this.oneWay = oneWay;
     }
 
-    public Trip(Date departing, Date arriving, Flight[] connectingFlights, boolean oneWay) {
-        this.departing = departing;
-        this.arriving = arriving;
-        this.connectingFlights = connectingFlights;
-        this.oneWay = oneWay;
+    public Date getDepartureDate() {
+        return departureDate;
     }
 
-    public Date getDepartingTime() {
-        return departing;
+    public Date getReturnDate() {
+        return returnDate;
     }
 
-    public Date getArrivingTime() {
-        return arriving;
+    public String getDepartingAirportCode() {
+        return departingAirportCode;
+    }
+
+    public String getReturningAirportCode() {
+        return returningAirportCode;
     }
 
     public Flight[] getConnectingFlights() {
@@ -37,5 +43,20 @@ public class Trip {
 
     public boolean isOneWay() {
         return oneWay;
+    }
+
+    @Override
+    public String toString() {
+        String trip = "Trip from " + departingAirportCode + " to " + returningAirportCode;
+        if (!oneWay) {
+            trip += " (returning).";
+        }
+        trip += "\n";
+        trip += "Date departing: " + departureDate;
+        if (!oneWay) {
+            trip += "\n";
+            trip += "Date returning: " + returnDate;
+        }
+        return trip;
     }
 }

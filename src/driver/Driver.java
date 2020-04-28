@@ -20,7 +20,8 @@ import utils.InputReader;
 public class Driver {
 
 	/**
-	 * 1. Select a departure airport and arrival airport for their desired travel
+	 * 1. Select a departure airport and arrival airport for their desired travel (90% done)
+	 * 2.
 	 */
 
 	/**
@@ -48,12 +49,10 @@ public class Driver {
 
 		// Read inputs for departure airport and date
 		Trip trip = InputReader.readTrip();
-//		String departingAirport = inputs[0];
-//		String departingDate = inputs[1];
-//		System.out.println("Departure airport: " + inputs[0]);
-//		System.out.println("Departure date: " + inputs[1]);
-//
-//		// Query the server for those inputs
+		System.out.println("---- Trip details ----");
+		System.out.println(trip.toString());
+
+		// Query the server for those inputs
 //		ServerInterface.INSTANCE.getDepartingFlights(teamName, departingAirport, departingDate);
 	}
 }
