@@ -3,6 +3,7 @@
  */
 package dao;
 
+import airplane.Airplane;
 import airplane.Airplanes;
 import airport.Airports;
 import flight.Arrival;
@@ -92,6 +93,59 @@ public enum ServerInterface {
 		
 	}
 
+
+	/**
+	 * This method will get the details of airplanes which includes available seating
+	 */
+	public Airplanes getAirplanes(String teamName) {
+		URL url;
+		HttpURLConnection connection;
+		BufferedReader reader;
+		String line;
+		StringBuffer result = new StringBuffer();
+
+		String xmlAirplanes;
+		Airplanes airports;
+
+		try {
+			/**
+			 * Create an HTTP connection to the server for a GET
+			 * QueryFactory provides the parameter annotations for the HTTP GET query string
+			 */
+			url = new URL(mUrlBase + QueryFactory.getAirplanes(teamName));
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("User-Agent", teamName);
+
+			/**
+			 * If response code of SUCCESS read the XML string returned
+			 * line by line to build the full return string
+			 */
+			int responseCode = connection.getResponseCode();
+			if (responseCode >= HttpURLConnection.HTTP_OK) {
+				InputStream inputStream = connection.getInputStream();
+				String encoding = connection.getContentEncoding();
+				encoding = (encoding == null ? "UTF-8" : encoding);
+
+				reader = new BufferedReader(new InputStreamReader(inputStream));
+				while ((line = reader.readLine()) != null) {
+					result.append(line);
+				}
+				reader.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		xmlAirplanes = result.toString();
+		airports = DaoAirplane.addAll(xmlAirplanes);
+		return airports;
+	}
+
 	public Flights getDepartingFlights (String teamName, String airportCode, String day) {
 		URL url;
 		HttpURLConnection connection;
@@ -137,24 +191,20 @@ public enum ServerInterface {
 		flights = DaoFlight.addAll(xmlFlights);
 		// System.out.println("ServerInterface.getDepartingFlights: " + xmlFlights);
 
-		return null; // stub
-	}
-
-	/**
-	 * This method will get the details of airplanes which includes available seating
-	 */
-	public Airplanes getAirplaneDetails() {
-		return null; // stub
+		return flights; // stub
 	}
 
 	/**
 	 * This method will take departure and arrival and find the connecting flights between them
 	 * @param teamName
-	 * @param departure
-	 * @param arrival
+	 * @param departureAirportCode
+	 * @param arrivalAirportCode
 	 */
-	public void findConnections(String teamName, Departure departure, Arrival arrival) {
+	public void findConnections(String teamName, String departureAirportCode, String arrivalAirportCode) {
+		// Get departing flights for departureAirportCode
 
+		// If there are no departing flights matching our arrivalAirportCode as destination,
+		// check departing flights for each of the airports returned
 	}
 
 	/**

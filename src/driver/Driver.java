@@ -8,6 +8,7 @@ import java.util.Collections;
 import airport.Airport;
 import airport.Airports;
 import dao.ServerInterface;
+import flight.Departure;
 import trip.Trip;
 import utils.InputReader;
 
@@ -21,7 +22,9 @@ public class Driver {
 
 	/**
 	 * 1. Select a departure airport and arrival airport for their desired travel (90% done)
-	 * 2.
+	 * 2. The user will be able to use the client software to
+	 * reserve flights to travel one-way (from departure to destination)
+	 * with potentially up to 2 layovers
 	 */
 
 	/**
@@ -48,11 +51,14 @@ public class Driver {
 		}
 
 		// Read inputs for departure airport and date
-		Trip trip = InputReader.readTrip();
-		System.out.println("---- Trip details ----");
-		System.out.println(trip.toString());
+//		Trip trip = InputReader.readTrip();
+//		System.out.println("---- Trip details ----");
+//		System.out.println(trip.toString());
 
 		// Query the server for those inputs
-//		ServerInterface.INSTANCE.getDepartingFlights(teamName, departingAirport, departingDate);
+//		Airport departingAirport
+//		Departure departure = new Departure();
+//		ServerInterface.INSTANCE.findConnections();
+		ServerInterface.INSTANCE.getAirplanes(teamName);
 	}
 }

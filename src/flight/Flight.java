@@ -19,8 +19,4 @@ public class Flight {
         this.arrival = arrival;
         this.seating = seating;
     }
-
-    public Flight() {
-
-    }
 }

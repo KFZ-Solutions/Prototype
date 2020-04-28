@@ -1,5 +1,6 @@
 package dao;
 
+import airplane.Airplane;
 import flight.Arrival;
 import flight.Departure;
 import flight.Flight;
@@ -56,7 +57,7 @@ public class DaoFlight {
 
     static private Flight buildFlight (Node nodeFlight) {
 //        Airplane airplane;
-        String airplane; // need to replace with Airplane
+        String airplane; // TODO: need to replace with Airplane
 
         int flightDuration;
         int number;
@@ -91,9 +92,10 @@ public class DaoFlight {
         System.out.println("Arrival date: " + arrivalDate);
         System.out.println("-----------------------");
 
+//        departure = new Departure(departureCode, Date.from(departureDate));
 
-
-        return new Flight(); // stub
+//        return new Flight(new Airplane(null, null, -1, -1), flightDuration, number, departure, arrival, seating); // stub
+        return null;
     }
 
     static private Date parseDateGMT(String original) {

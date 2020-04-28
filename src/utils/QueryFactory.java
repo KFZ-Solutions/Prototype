@@ -21,6 +21,10 @@ public class QueryFactory {
 		return "?team=" + teamName + "&action=list&list_type=airports";
 	}
 
+	public static String getAirplanes(String teamName) {
+		return "?team=" + teamName + "&action=list&list_type=airplanes";
+	}
+
 	public static String getDepartingFlights(String teamName, String airportCode, String day) {
 		return "?team=" + teamName + "&action=list&list_type=departing&airport=" + airportCode + "&day=" + day;
 	}
