@@ -17,6 +17,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -164,7 +167,7 @@ public enum ServerInterface {
 			 * QueryFactory provides the parameter annotations for the HTTP GET query string
 			 */
 			url = new URL(mUrlBase + QueryFactory.getDepartingFlights(teamName, airportCode, day));
-			System.out.println("---- Getting departing flights for: " + airportCode + " ----");
+//			System.out.println("---- Getting departing flights for: " + airportCode + " ----");
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("User-Agent", teamName);
@@ -206,32 +209,52 @@ public enum ServerInterface {
 	 * @param departureAirportCode
 	 * @param arrivalAirportCode
 	 */
-	public void findConnections(String teamName, String departureAirportCode, String arrivalAirportCode, String departureDate) {
+	public List<Flights> findConnections(String teamName, String departureAirportCode, String arrivalAirportCode, String departureDate, Flights firstLevelDepartingFlights) {
 		// Get departing flights for departureAirportCode
-		Flights departingFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, departureAirportCode, departureDate);
-		for (Flight flight : departingFlights) {
-			String airportCode = flight.getArrival().getAirportCode();
-//			System.out.println("Airport code: " + airportCode);
+		List<Flights> flightsList = new ArrayList<>();
+		Flights flights = new Flights();
+		for (Flight firstFlight : firstLevelDepartingFlights) {
+			String airportCode = firstFlight.getArrival().getAirportCode();
 			if (arrivalAirportCode.equals(airportCode)) {
 				// We found the connection!
+				flights.add(firstFlight);
 				System.out.println("Connection found from " + departureAirportCode + " to " + airportCode);
-				break;
 			}
 		}
-		// If there are no departing flights matching our arrivalAirportCode as destination,
-		// check departing flights for each of the airports returned
-//		for (Flight flight : departingFlights) {
-//			String check = flight.getArrival().getAirportCode();
-//			Flights secondConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
-//			for (Flight secondFlight : secondConnectionFlights) {
-//				String airportCode = secondFlight.getArrival().getAirportCode();
-//				if (airportCode.equals(arrivalAirportCode)) {
-//					// We found the connection!
-//					System.out.println("Connection found: " + airportCode);
-//					break;
-//				}
-//			}
-//		}
+		flightsList.add(flights);
+		flights = new Flights();
+		// Check departing flights for each of the airports returned
+		Flights secondLevelConnectionFlights = null;
+		for (Flight firstFlight : firstLevelDepartingFlights) {
+			String check = firstFlight.getArrival().getAirportCode();
+			secondLevelConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
+			for (Flight secondFlight : Objects.requireNonNull(secondLevelConnectionFlights)) {
+				String airportCode = secondFlight.getArrival().getAirportCode();
+				if (airportCode.equals(arrivalAirportCode)) {
+					// We found the connection!
+					flights.add(firstFlight);
+					flights.add(secondFlight);
+					System.out.println("Connection found: " + airportCode);
+				}
+			}
+		}
+		flightsList.add(flights);
+		flights = new Flights();
+		// Check departing flights for each of the airports returned from our search for second level flights
+		for (Flight secondFlight : Objects.requireNonNull(secondLevelConnectionFlights)) {
+			String check = secondFlight.getArrival().getAirportCode();
+			Flights thirdLevelConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
+			for (Flight thirdFlight : Objects.requireNonNull(thirdLevelConnectionFlights)) {
+				String airportCode = thirdFlight.getArrival().getAirportCode();
+				if (airportCode.equals(arrivalAirportCode)) {
+					// We found the connection!
+//					flights.add(firstFlight);
+					flights.add(secondFlight);
+					flights.add(thirdFlight);
+				}
+			}
+		}
+		return flightsList;
 	}
 
 	/**

@@ -62,12 +62,12 @@ public class DaoAirplane {
         firstClassSeats = Integer.parseInt(firstClassSeatsTxt);
         coachSeats = Integer.parseInt(coachSeatsTxt);
 
-        System.out.println("---- Parsed values ----");
-        System.out.println("Manufacturer: " + manufacturer);
-        System.out.println("Model: " + model);
-        System.out.println("First class seats: " + firstClassSeatsTxt);
-        System.out.println("Coach seats: " + coachSeatsTxt);
-        System.out.println("-----------------------");
+//        System.out.println("---- Parsed values ----");
+//        System.out.println("Manufacturer: " + manufacturer);
+//        System.out.println("Model: " + model);
+//        System.out.println("First class seats: " + firstClassSeatsTxt);
+//        System.out.println("Coach seats: " + coachSeatsTxt);
+//        System.out.println("-----------------------");
 
         return new Airplane(manufacturer, model, firstClassSeats, coachSeats);
     }

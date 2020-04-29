@@ -84,15 +84,15 @@ public class DaoFlight {
         arrivalCode = ((Element) nodeFlight).getElementsByTagName("Arrival").item(0).getFirstChild().getTextContent();
         arrivalDate = ((Element) nodeFlight).getElementsByTagName("Arrival").item(0).getChildNodes().item(1).getTextContent();
 
-        System.out.println("---- Parsed values ----");
-        System.out.println("Airplane: " + airplane);
-        System.out.println("FlightTime: " + flightDuration);
-        System.out.println("Number: " + number);
-        System.out.println("Departure code: " + departureCode);
-        System.out.println("Departure date: " + departureDate);
-        System.out.println("Arrival code: " + arrivalCode);
-        System.out.println("Arrival date: " + arrivalDate);
-        System.out.println("-----------------------");
+//        System.out.println("---- Parsed values ----");
+//        System.out.println("Airplane: " + airplane);
+//        System.out.println("FlightTime: " + flightDuration);
+//        System.out.println("Number: " + number);
+//        System.out.println("Departure code: " + departureCode);
+//        System.out.println("Departure date: " + departureDate);
+//        System.out.println("Arrival code: " + arrivalCode);
+//        System.out.println("Arrival date: " + arrivalDate);
+//        System.out.println("-----------------------");
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm");
         departure = new Departure(departureCode, sdf.parse(departureDate));
