@@ -71,21 +71,21 @@ public class Driver {
 		Flights departingFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, trip.getDepartingAirportCode(), sdf.format(trip.getDepartureDate()));
 		if (departingFlights != null) {
 			System.out.println("---- Flights matching your search ----");
-			Flights connections = ServerInterface.INSTANCE.findConnections(teamName, trip.getDepartingAirportCode(), trip.getArrivalAirportCode(), sdf.format(trip.getDepartureDate()), departingFlights);
-			if (connections != null) {
-				System.out.println("---- ... Flight ----");
-				for (int i = 0; i < connections.size(); i++) {
-					System.out.println(i + ". Flight from " + connections.get(i).getDeparture().getAirportCode() + " to " + connections.get(i).getArrival().getAirportCode());
-					System.out.println("\t Flight number: " + connections.get(i).getNumber());
-					System.out.println("\t Duration: " + connections.get(i).getFlightDuration());
-				}
-				System.out.println("--------");
-
-				System.out.println("Select the flight you would like to book: ");
-
-			} else {
-				System.out.println("No connecting flights to " + trip.getArrivalAirportCode() + " found for date " + trip.getDepartureDate() + ".");
-			}
+			ServerInterface.INSTANCE.findConnections(teamName, trip.getDepartingAirportCode(), trip.getArrivalAirportCode(), sdf.format(trip.getDepartureDate()), departingFlights);
+//			if (connections != null) {
+//				System.out.println("---- ... Flight ----");
+//				for (int i = 0; i < connections.size(); i++) {
+//					System.out.println(i + ". Flight from " + connections.get(i).getDeparture().getAirportCode() + " to " + connections.get(i).getArrival().getAirportCode());
+//					System.out.println("\t Flight number: " + connections.get(i).getNumber());
+//					System.out.println("\t Duration: " + connections.get(i).getFlightDuration());
+//				}
+//				System.out.println("--------");
+//
+//				System.out.println("Select the flight you would like to book: ");
+//
+//			} else {
+//				System.out.println("No connecting flights to " + trip.getArrivalAirportCode() + " found for date " + trip.getDepartureDate() + ".");
+//			}
 		} else {
 			System.out.println("No flights to " + trip.getArrivalAirportCode() + " found for date " + trip.getDepartureDate() + ".");
 		}

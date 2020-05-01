@@ -21,4 +21,12 @@ public class Departure implements IFlight {
     public Date getDate() {
         return time;
     }
+
+    @Override
+    public String toString() {
+        return "Departure{" +
+                "airportCode='" + airportCode + '\'' +
+                ", time=" + time +
+                '}';
+    }
 }

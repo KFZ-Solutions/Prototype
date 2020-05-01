@@ -20,4 +20,12 @@ public class Arrival {
     public Date getDate() {
         return time;
     }
+
+    @Override
+    public String toString() {
+        return "Arrival{" +
+                "airportCode='" + airportCode + '\'' +
+                ", time=" + time +
+                '}';
+    }
 }

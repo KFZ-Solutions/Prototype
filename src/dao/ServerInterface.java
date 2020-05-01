@@ -283,10 +283,41 @@ public enum ServerInterface {
 			}
 		}
 
-		System.out.println(firstConnectionMap.get("BOS"));
-		System.out.println(secondConnectionMap.get("BOS"));
-		System.out.println(thirdConnectionMap.get("BOS"));
-
+		List<Flight> oneConnectionFlights = firstConnectionMap.get(arrivalAirportCode);
+		List<Flight> twoConnectionFlights = secondConnectionMap.get(arrivalAirportCode);
+		List<Flight> threeConnectionFlights = thirdConnectionMap.get(arrivalAirportCode);
+		System.out.println(oneConnectionFlights);
+		System.out.println(twoConnectionFlights);
+		System.out.println(threeConnectionFlights);
+		System.out.println("Second connection flights:");
+		if (twoConnectionFlights != null) {
+			for (Flight flight : twoConnectionFlights) {
+				List<Flight> flights = firstConnectionMap.get(flight.getArrival().getAirportCode());
+				if (flights != null) {
+					for (Flight conn : flights) {
+						System.out.println("From: " + conn.getDeparture().getAirportCode() + " departs on " + conn.getDeparture().toString() + " arrives at " + conn.getArrival().toString());
+					}
+				}
+			}
+		}
+		System.out.println("Third connection flights:");
+		if (twoConnectionFlights != null) {
+			for (Flight flight : twoConnectionFlights) {
+				List<Flight> secondFlights = secondConnectionMap.get(flight.getArrival().getAirportCode());
+				if (secondFlights != null) {
+					for (Flight connSecond : secondFlights) {
+						String airportCode = connSecond.getDeparture().getAirportCode();
+						List<Flight> firstFlights = firstConnectionMap.get(airportCode);
+						System.out.println("From: " + connSecond + " which may come from: ");
+						if (firstFlights != null) {
+							for (Flight connFirst : firstFlights) {
+								System.out.println("\t " + connFirst.getDeparture().getAirportCode() + " departs on " + connFirst.getDeparture().toString() + " arrives at " + connFirst.getArrival().toString());
+							}
+						}
+					}
+				}
+			}
+		}
 
 //		// Get departing flights for departureAirportCode
 //		List<Flights> flightsList = new ArrayList<>();

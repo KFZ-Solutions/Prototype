@@ -43,4 +43,16 @@ public class Flight {
     public SeatClass getSeating() {
         return seating;
     }
+
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "airplane=" + airplane.toString() +
+                ", flightDuration=" + flightDuration +
+                ", number=" + number +
+                ", departure=" + departure.toString() +
+                ", arrival=" + arrival.toString() +
+                ", seating=" + seating +
+                '}';
+    }
 }
