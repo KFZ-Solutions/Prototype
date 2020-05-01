@@ -17,9 +17,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -209,52 +207,132 @@ public enum ServerInterface {
 	 * @param departureAirportCode
 	 * @param arrivalAirportCode
 	 */
-	public List<Flights> findConnections(String teamName, String departureAirportCode, String arrivalAirportCode, String departureDate, Flights firstLevelDepartingFlights) {
-		// Get departing flights for departureAirportCode
-		List<Flights> flightsList = new ArrayList<>();
-		Flights flights = new Flights();
-		for (Flight firstFlight : firstLevelDepartingFlights) {
-			String airportCode = firstFlight.getArrival().getAirportCode();
-			if (arrivalAirportCode.equals(airportCode)) {
-				// We found the connection!
-				flights.add(firstFlight);
-				System.out.println("Connection found from " + departureAirportCode + " to " + airportCode);
-			}
-		}
-		flightsList.add(flights);
-		flights = new Flights();
-		// Check departing flights for each of the airports returned
-		Flights secondLevelConnectionFlights = null;
-		for (Flight firstFlight : firstLevelDepartingFlights) {
-			String check = firstFlight.getArrival().getAirportCode();
-			secondLevelConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
-			for (Flight secondFlight : Objects.requireNonNull(secondLevelConnectionFlights)) {
-				String airportCode = secondFlight.getArrival().getAirportCode();
-				if (airportCode.equals(arrivalAirportCode)) {
-					// We found the connection!
-					flights.add(firstFlight);
-					flights.add(secondFlight);
-					System.out.println("Connection found: " + airportCode);
+	public void findConnections(String teamName, String departureAirportCode, String arrivalAirportCode, String departureDate, Flights firstLevelDepartingFlights) {
+		// .get(arrivalAirportCode) -> flight
+		Map<String, List<Flight>> firstConnectionMap = new HashMap<>();
+		Map<String, List<Flight>> secondConnectionMap = new HashMap<>();
+		Map<String, List<Flight>> thirdConnectionMap = new HashMap<>();
+
+		for (Flight firstLevelDepartingFlight : firstLevelDepartingFlights) {
+			if (firstConnectionMap.get(firstLevelDepartingFlight.getArrival().getAirportCode()) == null) {
+				// Instantiate a new list and add the current flight
+				List<Flight> tmp = new ArrayList<>();
+				tmp.add(firstLevelDepartingFlight);
+				firstConnectionMap.put(firstLevelDepartingFlight.getArrival().getAirportCode(), tmp);
+				// Add 2nd connecting flight
+				Flights secondLevelDepartingFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, firstLevelDepartingFlight.getArrival().getAirportCode(), departureDate);
+				if (secondLevelDepartingFlights != null) {
+					for (Flight secondLevelDepartingFlight : secondLevelDepartingFlights) {
+						List<Flight> tmpSecondLevelFlights = secondConnectionMap.get(secondLevelDepartingFlight.getArrival().getAirportCode());
+						if (tmpSecondLevelFlights == null) {
+							tmpSecondLevelFlights = new ArrayList<>();
+							tmpSecondLevelFlights.add(secondLevelDepartingFlight);
+						} else {
+							boolean exists = false;
+							for (Flight flight : tmpSecondLevelFlights) {
+								if (flight.getNumber() == secondLevelDepartingFlight.getNumber()) {
+									exists = true;
+									break;
+								}
+							}
+							if (!exists) {
+								tmpSecondLevelFlights.add(secondLevelDepartingFlight);
+							}
+						}
+						secondConnectionMap.put(secondLevelDepartingFlight.getArrival().getAirportCode(), tmpSecondLevelFlights);
+						// Add 3rd connecting flight
+						List<Flight> thirdLevelDepartingFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, secondLevelDepartingFlight.getArrival().getAirportCode(), departureDate);
+						if (thirdLevelDepartingFlights != null) {
+							for (Flight thirdLevelDepartingFlight : thirdLevelDepartingFlights) {
+								List<Flight> tmpThirdLevelFlights = thirdConnectionMap.get(thirdLevelDepartingFlight.getArrival().getAirportCode());
+								if (tmpThirdLevelFlights == null) {
+									tmpThirdLevelFlights = new ArrayList<>();
+									tmpThirdLevelFlights.add(thirdLevelDepartingFlight);
+								} else {
+									boolean exists = false;
+									for (Flight flight : tmpThirdLevelFlights) {
+										if (flight.getNumber() == thirdLevelDepartingFlight.getNumber()) {
+											exists = true;
+											break;
+										}
+									}
+									if (!exists) {
+										tmpThirdLevelFlights.add(thirdLevelDepartingFlight);
+									}
+								}
+								thirdConnectionMap.put(thirdLevelDepartingFlight.getArrival().getAirportCode(), tmpThirdLevelFlights);
+							}
+						}
+					}
 				}
+			} else {
+				// Check the existing list for the current flight
+				boolean exists = false;
+				List<Flight> tmpFlights = firstConnectionMap.get(firstLevelDepartingFlight.getArrival().getAirportCode());
+				for (Flight flight : tmpFlights) {
+					// Avoid storing duplicate flights
+					if (flight.getNumber() == firstLevelDepartingFlight.getNumber()) {
+						exists = true;
+						break;
+					}
+				}
+				if (!exists) {
+					tmpFlights.add(firstLevelDepartingFlight);
+				}
+				firstConnectionMap.put(firstLevelDepartingFlight.getArrival().getAirportCode(), tmpFlights);
 			}
 		}
-		flightsList.add(flights);
-		flights = new Flights();
-		// Check departing flights for each of the airports returned from our search for second level flights
-		for (Flight secondFlight : Objects.requireNonNull(secondLevelConnectionFlights)) {
-			String check = secondFlight.getArrival().getAirportCode();
-			Flights thirdLevelConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
-			for (Flight thirdFlight : Objects.requireNonNull(thirdLevelConnectionFlights)) {
-				String airportCode = thirdFlight.getArrival().getAirportCode();
-				if (airportCode.equals(arrivalAirportCode)) {
-					// We found the connection!
+
+		System.out.println(firstConnectionMap.get("BOS"));
+		System.out.println(secondConnectionMap.get("BOS"));
+		System.out.println(thirdConnectionMap.get("BOS"));
+
+
+//		// Get departing flights for departureAirportCode
+//		List<Flights> flightsList = new ArrayList<>();
+//		Flights flights = new Flights();
+//		for (Flight firstFlight : firstLevelDepartingFlights) {
+//			String airportCode = firstFlight.getArrival().getAirportCode();
+//			if (arrivalAirportCode.equals(airportCode)) {
+//				// We found the connection!
+//				flights.add(firstFlight);
+//				System.out.println("Connection found from " + departureAirportCode + " to " + airportCode);
+//			}
+//		}
+//		flightsList.add(flights);
+//		flights = new Flights();
+//		// Check departing flights for each of the airports returned
+//		Flights secondLevelConnectionFlights = null;
+//		for (Flight firstFlight : firstLevelDepartingFlights) {
+//			String check = firstFlight.getArrival().getAirportCode();
+//			secondLevelConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
+//			for (Flight secondFlight : Objects.requireNonNull(secondLevelConnectionFlights)) {
+//				String airportCode = secondFlight.getArrival().getAirportCode();
+//				if (airportCode.equals(arrivalAirportCode)) {
+//					// We found the connection!
 //					flights.add(firstFlight);
-					flights.add(secondFlight);
-					flights.add(thirdFlight);
-				}
-			}
-		}
-		return flightsList;
+//					flights.add(secondFlight);
+//					System.out.println("Connection found: " + airportCode);
+//				}
+//			}
+//		}
+//		flightsList.add(flights);
+//		flights = new Flights();
+//		// Check departing flights for each of the airports returned from our search for second level flights
+//		for (Flight secondFlight : Objects.requireNonNull(secondLevelConnectionFlights)) {
+//			String check = secondFlight.getArrival().getAirportCode();
+//			Flights thirdLevelConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
+//			for (Flight thirdFlight : Objects.requireNonNull(thirdLevelConnectionFlights)) {
+//				String airportCode = thirdFlight.getArrival().getAirportCode();
+//				if (airportCode.equals(arrivalAirportCode)) {
+//					// We found the connection!
+////					flights.add(firstFlight);
+//					flights.add(secondFlight);
+//					flights.add(thirdFlight);
+//				}
+//			}
+//		}
+//		return flightsList;
 	}
 
 	/**
