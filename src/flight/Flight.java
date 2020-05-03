@@ -20,6 +20,15 @@ public class Flight {
         this.seating = seating;
     }
 
+    /**
+     * Sorting:
+     *  - Departure time
+     *  - Arrival time
+     *  - Duration
+     *  - Price
+     */
+
+
     public Airplane getAirplane() {
         return airplane;
     }

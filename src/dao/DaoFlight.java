@@ -15,6 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,6 +72,11 @@ public class DaoFlight {
 
         Departure departure;
         Arrival arrival;
+
+        double firstClassPrice;
+        double coachPrice;
+        int totalFirstClass;
+        int totalCoach;
         SeatClass seating;
 
         Element elementFlight = (Element) nodeFlight;
@@ -83,6 +89,12 @@ public class DaoFlight {
 
         arrivalCode = ((Element) nodeFlight).getElementsByTagName("Arrival").item(0).getFirstChild().getTextContent();
         arrivalDate = ((Element) nodeFlight).getElementsByTagName("Arrival").item(0).getChildNodes().item(1).getTextContent();
+
+        firstClassPrice = NumberFormat.getNumberInstance(java.util.Locale.US).parse(((Element) nodeFlight).getElementsByTagName("Seating").item(0).getFirstChild().getAttributes().getNamedItem("Price").getNodeValue().replace("$", "")).doubleValue();
+        coachPrice = NumberFormat.getNumberInstance(java.util.Locale.US).parse(((Element) nodeFlight).getElementsByTagName("Seating").item(0).getChildNodes().item(1).getAttributes().getNamedItem("Price").getNodeValue().replace("$", "")).doubleValue();
+
+        totalFirstClass = Integer.parseInt(((Element) nodeFlight).getElementsByTagName("Seating").item(0).getFirstChild().getTextContent());
+        totalCoach = Integer.parseInt(((Element) nodeFlight).getElementsByTagName("Seating").item(0).getChildNodes().item(1).getTextContent());
 
 //        System.out.println("---- Parsed values ----");
 //        System.out.println("Airplane: " + airplane);
@@ -97,9 +109,9 @@ public class DaoFlight {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm");
         departure = new Departure(departureCode, sdf.parse(departureDate));
         arrival = new Arrival(arrivalCode, sdf.parse(arrivalDate));
-        seating = new SeatClass(airplane);
+        seating = new SeatClass(airplane, firstClassPrice, coachPrice, totalFirstClass, totalCoach);
 
-        return new Flight(new Airplane(airplane), flightDuration, number, departure, arrival, seating); // stub
+        return new Flight(new Airplane(airplane), flightDuration, number, departure, arrival, seating);
     }
 
     static private Date parseDateGMT(String original) {
