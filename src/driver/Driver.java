@@ -4,6 +4,7 @@
 package driver;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import airplane.Airplane;
@@ -51,8 +52,11 @@ public class Driver {
 		// Try to get a list of airports
 		Airports airports = ServerInterface.INSTANCE.getAirports(teamName);
 		Collections.sort(airports);
+		ArrayList<String> availableAirports = new ArrayList<String>();
 		for (Airport airport : airports) {
-			 System.out.println(airport.toString());
+			 String airportString = airport.toString();
+			 System.out.println(airportString);
+			 availableAirports.add(airportString.substring(0, 3));
 		}
 
 		// Try to get a list of airplanes
@@ -62,7 +66,7 @@ public class Driver {
 		}
 
 		// Read inputs for departure airport and date
-		Trip trip = InputReader.readTrip();
+		Trip trip = InputReader.readTrip(availableAirports);
 		System.out.println("---- Trip details ----");
 		System.out.println(trip.toString());
 
