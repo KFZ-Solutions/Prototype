@@ -3,21 +3,20 @@
  */
 package dao;
 
-import airplane.Airplane;
 import airplane.Airplanes;
 import airport.Airports;
-import flight.Arrival;
-import flight.Departure;
 import flight.Flight;
 import flight.Flights;
 import trip.Trip;
 import utils.QueryFactory;
+import utils.TimeUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.*;
+import java.time.*;
 
 
 /**
@@ -206,8 +205,9 @@ public enum ServerInterface {
 	 * @param teamName
 	 * @param departureAirportCode
 	 * @param arrivalAirportCode
+	 * @return
 	 */
-	public void findConnections(String teamName, String departureAirportCode, String arrivalAirportCode, String departureDate, Flights firstLevelDepartingFlights) {
+	public Map<String, Map<Integer, List<Flight>>> findConnections(String teamName, String departureAirportCode, String arrivalAirportCode, String departureDate, Flights firstLevelDepartingFlights) {
 		// .get(arrivalAirportCode) -> flight
 		Map<String, List<Flight>> firstConnectionMap = new HashMap<>();
 		Map<String, List<Flight>> secondConnectionMap = new HashMap<>();
@@ -283,35 +283,124 @@ public enum ServerInterface {
 			}
 		}
 
+		int currOneConnectionID = 1;
+		int currTwoConnectionsID = 1;
+		int currThreeConnectionsID = 1;
+		Map<Integer, List<Flight>> finalOneConnection = new HashMap<>();
+		Map<Integer, List<Flight>> finalTwoConnections = new HashMap<>();
+		Map<Integer,List<Flight>> finalThreeConnections = new HashMap<>();
+
+		// Duplicate elimination
+		// Check layover time & time conversion
 		List<Flight> oneConnectionFlights = firstConnectionMap.get(arrivalAirportCode);
 		List<Flight> twoConnectionFlights = secondConnectionMap.get(arrivalAirportCode);
 		List<Flight> threeConnectionFlights = thirdConnectionMap.get(arrivalAirportCode);
 		System.out.println(oneConnectionFlights);
 		System.out.println(twoConnectionFlights);
 		System.out.println(threeConnectionFlights);
-		System.out.println("Second connection flights:");
-		if (twoConnectionFlights != null) {
-			for (Flight flight : twoConnectionFlights) {
+		// System.out.println("Direct flights: ");
+		if (oneConnectionFlights != null) {
+			for (Flight flight : oneConnectionFlights) {
 				List<Flight> flights = firstConnectionMap.get(flight.getArrival().getAirportCode());
 				if (flights != null) {
 					for (Flight conn : flights) {
-						System.out.println("From: " + conn.getDeparture().getAirportCode() + " departs on " + conn.getDeparture().toString() + " arrives at " + conn.getArrival().toString());
+						boolean dup = false;
+						for (int i=1; i<=currOneConnectionID; i++) {
+							List<Flight> fCheck = finalOneConnection.get(i);
+							if (fCheck != null) {
+								for (Flight tmp : fCheck) {
+									if (tmp.getNumber() == conn.getNumber()) {
+										dup = true;
+										break;
+									}
+								}
+							}
+						}
+						if (!dup) {
+							ArrayList<Flight> fList = new ArrayList<>();
+							fList.add(conn);
+							finalOneConnection.put(currOneConnectionID, fList);
+							currOneConnectionID++;
+							// System.out.println("From: " + conn.getDeparture().getAirportCode() + " departs on " + conn.getDeparture().toString() + " arrives at " + conn.getArrival().toString());
+						}
 					}
 				}
 			}
 		}
-		System.out.println("Third connection flights:");
+		// System.out.println("Second connection flights:");
 		if (twoConnectionFlights != null) {
-			for (Flight flight : twoConnectionFlights) {
-				List<Flight> secondFlights = secondConnectionMap.get(flight.getArrival().getAirportCode());
+			for (Flight connSecond : twoConnectionFlights) {
+				String airportCodeSecond = connSecond.getDeparture().getAirportCode();
+				List<Flight> firstFlights = firstConnectionMap.get(airportCodeSecond);
+				// System.out.println("From: " + connSecond + " which may come from: ");
+				if (firstFlights != null) {
+					for (Flight connFirst : firstFlights) {
+						Date arr = connFirst.getArrival().getDate();
+						Date dep = connSecond.getDeparture().getDate();
+						boolean before = arr.before(dep);
+						boolean withinLayoverTime = TimeUtils.getHourDifference(arr, dep) <= 4;
+						if (before && withinLayoverTime) {
+							Map<String, Boolean> dupMap = new HashMap<>();
+							for (int i=1; i<=currTwoConnectionsID; i++) {
+								List<Flight> fCheck = finalTwoConnections.get(i);
+								if (fCheck != null) {
+									String code = fCheck.get(0).getNumber() + "_" + fCheck.get(1).getNumber();
+									dupMap.put(code, true);
+								}
+							}
+							if (!dupMap.containsKey(connFirst.getNumber() + "_" + connSecond.getNumber())) {
+								ArrayList<Flight> fList = new ArrayList<>();
+								fList.add(connFirst);
+								fList.add(connSecond);
+								finalTwoConnections.put(currTwoConnectionsID, fList);
+								currTwoConnectionsID++;
+								// System.out.println("\t " + connFirst.getDeparture().getAirportCode() + " departs on " + connFirst.getDeparture().toString() + " arrives at " + connFirst.getArrival().toString());
+							}
+						}
+					}
+				}
+			}
+		}
+		// System.out.println("Third connection flights:");
+		if (threeConnectionFlights != null) {
+			for (Flight connThird : threeConnectionFlights) {
+				String airportCodeThird = connThird.getDeparture().getAirportCode();
+				List<Flight> secondFlights = secondConnectionMap.get(airportCodeThird);
+				// System.out.println("\tFrom: " + connThird + " which may come from: ");
 				if (secondFlights != null) {
 					for (Flight connSecond : secondFlights) {
-						String airportCode = connSecond.getDeparture().getAirportCode();
-						List<Flight> firstFlights = firstConnectionMap.get(airportCode);
-						System.out.println("From: " + connSecond + " which may come from: ");
+						String airportCodeSecond = connSecond.getDeparture().getAirportCode();
+						List<Flight> firstFlights = firstConnectionMap.get(airportCodeSecond);
+						// System.out.println("\t\tFrom: " + connSecond + " which may come from: ");
 						if (firstFlights != null) {
 							for (Flight connFirst : firstFlights) {
-								System.out.println("\t " + connFirst.getDeparture().getAirportCode() + " departs on " + connFirst.getDeparture().toString() + " arrives at " + connFirst.getArrival().toString());
+								Date arr1 = connFirst.getArrival().getDate();
+								Date dep1 = connSecond.getDeparture().getDate();
+								Date arr2 = connSecond.getArrival().getDate();
+								Date dep2 = connThird.getDeparture().getDate();
+								boolean before1 = arr1.before(dep1);
+								boolean before2 = arr2.before(dep2);
+								boolean withinLayoverTime1 = TimeUtils.getHourDifference(arr1, dep1) <= 4;
+								boolean withinLayoverTime2 = TimeUtils.getHourDifference(arr2, dep2) <= 4;
+								if (before1 && before2 && connFirst.getDeparture().getAirportCode().equals(departureAirportCode) && withinLayoverTime1 && withinLayoverTime2) {
+									Map<String, Boolean> dupMap = new HashMap<>();
+									for (int i=1; i<=currThreeConnectionsID; i++) {
+										List<Flight> fCheck = finalThreeConnections.get(i);
+										if (fCheck != null) {
+											String code = fCheck.get(0).getNumber() + "_" + fCheck.get(1).getNumber() + "_" + fCheck.get(2).getNumber();
+											dupMap.put(code, true);
+										}
+									}
+									if (!dupMap.containsKey(connFirst.getNumber() + "_" + connSecond.getNumber() + "_" + connThird.getNumber())) {
+										ArrayList<Flight> fList = new ArrayList<>();
+										fList.add(connFirst);
+										fList.add(connSecond);
+										fList.add(connThird);
+										finalThreeConnections.put(currThreeConnectionsID, fList);
+										currThreeConnectionsID++;
+										// System.out.println("\t\t\t " + connFirst.getDeparture().getAirportCode() + " departs on " + connFirst.getDeparture().toString() + " arrives at " + connFirst.getArrival().toString());
+									}
+								}
 							}
 						}
 					}
@@ -319,51 +408,12 @@ public enum ServerInterface {
 			}
 		}
 
-//		// Get departing flights for departureAirportCode
-//		List<Flights> flightsList = new ArrayList<>();
-//		Flights flights = new Flights();
-//		for (Flight firstFlight : firstLevelDepartingFlights) {
-//			String airportCode = firstFlight.getArrival().getAirportCode();
-//			if (arrivalAirportCode.equals(airportCode)) {
-//				// We found the connection!
-//				flights.add(firstFlight);
-//				System.out.println("Connection found from " + departureAirportCode + " to " + airportCode);
-//			}
-//		}
-//		flightsList.add(flights);
-//		flights = new Flights();
-//		// Check departing flights for each of the airports returned
-//		Flights secondLevelConnectionFlights = null;
-//		for (Flight firstFlight : firstLevelDepartingFlights) {
-//			String check = firstFlight.getArrival().getAirportCode();
-//			secondLevelConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
-//			for (Flight secondFlight : Objects.requireNonNull(secondLevelConnectionFlights)) {
-//				String airportCode = secondFlight.getArrival().getAirportCode();
-//				if (airportCode.equals(arrivalAirportCode)) {
-//					// We found the connection!
-//					flights.add(firstFlight);
-//					flights.add(secondFlight);
-//					System.out.println("Connection found: " + airportCode);
-//				}
-//			}
-//		}
-//		flightsList.add(flights);
-//		flights = new Flights();
-//		// Check departing flights for each of the airports returned from our search for second level flights
-//		for (Flight secondFlight : Objects.requireNonNull(secondLevelConnectionFlights)) {
-//			String check = secondFlight.getArrival().getAirportCode();
-//			Flights thirdLevelConnectionFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, check, departureDate);
-//			for (Flight thirdFlight : Objects.requireNonNull(thirdLevelConnectionFlights)) {
-//				String airportCode = thirdFlight.getArrival().getAirportCode();
-//				if (airportCode.equals(arrivalAirportCode)) {
-//					// We found the connection!
-////					flights.add(firstFlight);
-//					flights.add(secondFlight);
-//					flights.add(thirdFlight);
-//				}
-//			}
-//		}
-//		return flightsList;
+		Map<String, Map<Integer, List<Flight>>> mainFlightMap = new HashMap<>();
+		mainFlightMap.put("oneConnection", finalOneConnection);
+		mainFlightMap.put("twoConnections", finalTwoConnections);
+		mainFlightMap.put("threeConnections", finalThreeConnections);
+
+		return mainFlightMap;
 	}
 
 	/**

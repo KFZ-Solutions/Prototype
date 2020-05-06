@@ -6,6 +6,8 @@ package driver;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import airplane.Airplane;
 import airplane.Airplanes;
@@ -75,21 +77,41 @@ public class Driver {
 		Flights departingFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, trip.getDepartingAirportCode(), sdf.format(trip.getDepartureDate()));
 		if (departingFlights != null) {
 			System.out.println("---- Flights matching your search ----");
-			ServerInterface.INSTANCE.findConnections(teamName, trip.getDepartingAirportCode(), trip.getArrivalAirportCode(), sdf.format(trip.getDepartureDate()), departingFlights);
-//			if (connections != null) {
-//				System.out.println("---- ... Flight ----");
-//				for (int i = 0; i < connections.size(); i++) {
-//					System.out.println(i + ". Flight from " + connections.get(i).getDeparture().getAirportCode() + " to " + connections.get(i).getArrival().getAirportCode());
-//					System.out.println("\t Flight number: " + connections.get(i).getNumber());
-//					System.out.println("\t Duration: " + connections.get(i).getFlightDuration());
-//				}
-//				System.out.println("--------");
-//
-//				System.out.println("Select the flight you would like to book: ");
-//
-//			} else {
-//				System.out.println("No connecting flights to " + trip.getArrivalAirportCode() + " found for date " + trip.getDepartureDate() + ".");
-//			}
+			Map<String, Map<Integer, List<Flight>>> mainFlightMap = ServerInterface.INSTANCE.findConnections(teamName, trip.getDepartingAirportCode(), trip.getArrivalAirportCode(), sdf.format(trip.getDepartureDate()), departingFlights);
+			Map<Integer, List<Flight>> oneConnection = mainFlightMap.get("oneConnection");
+			System.out.println("There are a total of " + oneConnection.size() + " direct flights.");
+			Map<Integer, List<Flight>> twoConnections = mainFlightMap.get("twoConnections");
+			System.out.println("There are a total of " + twoConnections.size() + " two-connection flights.");
+			Map<Integer, List<Flight>> threeConnections = mainFlightMap.get("threeConnections");
+			System.out.println("There are a total of " + threeConnections.size() + " three-connection flights.");
+			// Loop through each map (of the 3) and output the key of each entry followed by the entry values.
+
+			System.out.println("DIRECT:");
+			for (int i=1; i<=oneConnection.size(); i++) {
+				List<Flight> flights = oneConnection.get(i);
+				System.out.println("Flight " + i + ":");
+				for (Flight flight : flights) {
+					System.out.println("\t" + flight.toString());
+				}
+			}
+
+			System.out.println("TWO:");
+			for (int i=1; i<=twoConnections.size(); i++) {
+				List<Flight> flights = twoConnections.get(i);
+				System.out.println("Flight " + i + ":");
+				for (Flight flight : flights) {
+					System.out.println("\t" + flight.toString());
+				}
+			}
+
+			System.out.println("THREE:");
+			for (int i=1; i<=threeConnections.size(); i++) {
+				List<Flight> flights = threeConnections.get(i);
+				System.out.println("Flight " + i + ":");
+				for (Flight flight : flights) {
+					System.out.println("\t" + flight.toString());
+				}
+			}
 		} else {
 			System.out.println("No flights to " + trip.getArrivalAirportCode() + " found for date " + trip.getDepartureDate() + ".");
 		}

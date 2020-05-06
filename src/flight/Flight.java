@@ -55,13 +55,10 @@ public class Flight {
 
     @Override
     public String toString() {
-        return "Flight{" +
-                "airplane=" + airplane.toString() +
-                ", flightDuration=" + flightDuration +
-                ", number=" + number +
+        return "Flight {" +
+                "number=" + number +
                 ", departure=" + departure.toString() +
                 ", arrival=" + arrival.toString() +
-                ", seating=" + seating +
                 '}';
     }
 }

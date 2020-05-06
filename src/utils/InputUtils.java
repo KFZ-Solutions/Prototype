@@ -21,11 +21,11 @@ public class InputUtils {
      * @return
      */
     public static boolean validateDateInput(String dateInput) {
-        if (dateInput.matches("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$")) {
+        if (!dateInput.matches("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$")) {
             System.out.print("Date format does not match yyyy-mm-dd. ");
             return false;
         }
-        return true; // stub
+        return true;
     }
 
     /**
