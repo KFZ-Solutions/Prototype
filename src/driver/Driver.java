@@ -4,10 +4,7 @@
 package driver;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import airplane.Airplane;
 import airplane.Airplanes;
@@ -86,9 +83,13 @@ public class Driver {
 			System.out.println("There are a total of " + threeConnections.size() + " three-connection flights.");
 			// Loop through each map (of the 3) and output the key of each entry followed by the entry values.
 
+			Map<Integer, List<Flight>> searchFlightsResult = new HashMap<>();
+			Integer resultCount = 0;
+
 			System.out.println("DIRECT:");
 			for (int i=1; i<=oneConnection.size(); i++) {
 				List<Flight> flights = oneConnection.get(i);
+				searchFlightsResult.put(++resultCount, flights);
 				System.out.println("Flight " + i + ":");
 				for (Flight flight : flights) {
 					System.out.println("\t" + flight.toString());
@@ -98,6 +99,7 @@ public class Driver {
 			System.out.println("TWO:");
 			for (int i=1; i<=twoConnections.size(); i++) {
 				List<Flight> flights = twoConnections.get(i);
+				searchFlightsResult.put(++resultCount, flights);
 				System.out.println("Flight " + i + ":");
 				for (Flight flight : flights) {
 					System.out.println("\t" + flight.toString());
@@ -107,11 +109,17 @@ public class Driver {
 			System.out.println("THREE:");
 			for (int i=1; i<=threeConnections.size(); i++) {
 				List<Flight> flights = threeConnections.get(i);
+				searchFlightsResult.put(++resultCount, flights);
 				System.out.println("Flight " + i + ":");
 				for (Flight flight : flights) {
 					System.out.println("\t" + flight.toString());
 				}
 			}
+
+			List<Flight> selectedFlights = InputReader.readFlightSelection(searchFlightsResult);
+			System.out.println("Your selected Flight is:");
+			System.out.println(selectedFlights.toString());
+
 		} else {
 			System.out.println("No flights to " + trip.getArrivalAirportCode() + " found for date " + trip.getDepartureDate() + ".");
 		}

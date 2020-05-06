@@ -1,12 +1,11 @@
 package utils;
 
+import flight.Flight;
 import trip.Trip;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class InputReader {
 
@@ -71,8 +70,15 @@ public class InputReader {
         }
     }
 
-    public static void readFlightSelection() {
+    public static List<Flight> readFlightSelection(Map<Integer, List<Flight>> searchFlightsResult) {
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.print("Please enter the flights number you want: ");
+        String flightsNumber = scanner.nextLine().replaceAll("\\s+","");
+        System.out.print("You picked flights number: " + flightsNumber);
+
+        List<Flight> selectedFlights = searchFlightsResult.get(Integer.parseInt(flightsNumber));
+        return selectedFlights;
     }
 
 }
