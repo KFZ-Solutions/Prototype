@@ -6,7 +6,7 @@ import java.util.List;
 
 public class FlightUtils {
     /**
-     * Calculates total duration of flight
+     * Check if flights has available seats
      */
     public static boolean flightsHasAvailableSeat(List<Flight> flights) {
         for (Flight flight : flights) {
