@@ -161,10 +161,13 @@ public class Driver {
 						Map<Integer, List<Flight>> threeConnectionsReturn = mainReturnFlightMap.get("threeConnections");
 						System.out.println("There are a total of " + threeConnectionsReturn.size() + " three-connection returning flights.");
 
+						Map<Integer, List<Flight>> searchReturnFlightsResult = new HashMap<>();
+						int returnResultCount = 0;
+
 						System.out.println("Direct returning flights to " + trip.getDepartingAirportCode() + ":");
 						for (int i=1; i<=oneConnectionReturn.size(); i++) {
 							List<Flight> flights = oneConnectionReturn.get(i);
-							// searchFlightsResult.put(++resultCount, flights);
+							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + i + ":");
 							for (Flight flight : flights) {
 								System.out.println("\t" + flight.toString());
@@ -174,7 +177,7 @@ public class Driver {
 						System.out.println("Two-connection returning flights to " + trip.getDepartingAirportCode() + ":");
 						for (int i=1; i<=twoConnectionsReturn.size(); i++) {
 							List<Flight> flights = twoConnectionsReturn.get(i);
-							// searchFlightsResult.put(++resultCount, flights);
+							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + i + ":");
 							for (Flight flight : flights) {
 								System.out.println("\t" + flight.toString());
@@ -184,12 +187,17 @@ public class Driver {
 						System.out.println("Three-connection returning flights to " + trip.getDepartingAirportCode() + ":");
 						for (int i=1; i<=threeConnectionsReturn.size(); i++) {
 							List<Flight> flights = threeConnectionsReturn.get(i);
-							// searchFlightsResult.put(++resultCount, flights);
+							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + i + ":");
 							for (Flight flight : flights) {
 								System.out.println("\t" + flight.toString());
 							}
 						}
+
+						List<Flight> selectedReturnFlights = InputReader.readFlightSelection(searchReturnFlightsResult);
+						System.out.println("Your selected returning Flight is:");
+						System.out.println(selectedReturnFlights.toString());
+
 					}
 				}
 			}
