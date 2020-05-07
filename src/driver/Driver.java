@@ -87,7 +87,7 @@ public class Driver {
 			Map<Integer, List<Flight>> searchFlightsResult = new HashMap<>();
 			int resultCount = 0;
 
-			System.out.println("DIRECT:");
+			System.out.println("Direct flights to " + trip.getArrivalAirportCode() + ":");
 			for (int i=1; i<=oneConnection.size(); i++) {
 				List<Flight> flights = oneConnection.get(i);
 				searchFlightsResult.put(++resultCount, flights);
@@ -97,7 +97,7 @@ public class Driver {
 				}
 			}
 
-			System.out.println("TWO:");
+			System.out.println("Two-connection flights to " + trip.getArrivalAirportCode() + ":");
 			for (int i=1; i<=twoConnections.size(); i++) {
 				List<Flight> flights = twoConnections.get(i);
 				searchFlightsResult.put(++resultCount, flights);
@@ -107,7 +107,7 @@ public class Driver {
 				}
 			}
 
-			System.out.println("THREE:");
+			System.out.println("Three-connection flights to " + trip.getArrivalAirportCode() + ":");
 			for (int i=1; i<=threeConnections.size(); i++) {
 				List<Flight> flights = threeConnections.get(i);
 				searchFlightsResult.put(++resultCount, flights);
@@ -133,15 +133,64 @@ public class Driver {
 			}
 
 			System.out.println();
+			boolean reservedSeat = false;
 			for (Flight selected : selectedFlights) {
 				System.out.println("Please select seating for flight " + selected.getNumber() + ": ");
 				String seating = InputReader.readSeating();
 				// TODO: confirmation
 				String selectedSeating = seating.toLowerCase();
 				if (selectedSeating.equals("coach")) {
-					ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+					reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
 				} else {
-					ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+					reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+				}
+			}
+			if (reservedSeat) {
+				System.out.println("Seat reserved!");
+				System.out.println("Searching for return flight:");
+				if (!trip.isOneWay()) {
+					Date returnDate = trip.getReturnDate();
+					Flights departingFlightsReturn = ServerInterface.INSTANCE.getDepartingFlights(teamName, trip.getArrivalAirportCode(), sdf.format(returnDate));
+					if (departingFlightsReturn != null) {
+						System.out.println("---- Return flights matching your search ----");
+						Map<String, Map<Integer, List<Flight>>> mainReturnFlightMap = ServerInterface.INSTANCE.findConnections(teamName, trip.getArrivalAirportCode(), trip.getDepartingAirportCode(), sdf.format(returnDate), departingFlightsReturn);
+						Map<Integer, List<Flight>> oneConnectionReturn = mainReturnFlightMap.get("oneConnection");
+						System.out.println("There are a total of " + oneConnectionReturn.size() + " direct returning flights.");
+						Map<Integer, List<Flight>> twoConnectionsReturn = mainReturnFlightMap.get("twoConnections");
+						System.out.println("There are a total of " + twoConnectionsReturn.size() + " two-connection returning flights.");
+						Map<Integer, List<Flight>> threeConnectionsReturn = mainReturnFlightMap.get("threeConnections");
+						System.out.println("There are a total of " + threeConnectionsReturn.size() + " three-connection returning flights.");
+
+						System.out.println("Direct returning flights to " + trip.getDepartingAirportCode() + ":");
+						for (int i=1; i<=oneConnectionReturn.size(); i++) {
+							List<Flight> flights = oneConnectionReturn.get(i);
+							// searchFlightsResult.put(++resultCount, flights);
+							System.out.println("Flight " + i + ":");
+							for (Flight flight : flights) {
+								System.out.println("\t" + flight.toString());
+							}
+						}
+
+						System.out.println("Two-connection returning flights to " + trip.getDepartingAirportCode() + ":");
+						for (int i=1; i<=twoConnectionsReturn.size(); i++) {
+							List<Flight> flights = twoConnectionsReturn.get(i);
+							// searchFlightsResult.put(++resultCount, flights);
+							System.out.println("Flight " + i + ":");
+							for (Flight flight : flights) {
+								System.out.println("\t" + flight.toString());
+							}
+						}
+
+						System.out.println("Three-connection returning flights to " + trip.getDepartingAirportCode() + ":");
+						for (int i=1; i<=threeConnectionsReturn.size(); i++) {
+							List<Flight> flights = threeConnectionsReturn.get(i);
+							// searchFlightsResult.put(++resultCount, flights);
+							System.out.println("Flight " + i + ":");
+							for (Flight flight : flights) {
+								System.out.println("\t" + flight.toString());
+							}
+						}
+					}
 				}
 			}
 

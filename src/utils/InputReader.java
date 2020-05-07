@@ -41,7 +41,7 @@ public class InputReader {
             System.out.print("Invalid round-trip answer. Please re-enter the Y or N: ");
             roundTrip = scanner.nextLine().replaceAll("\\s+","");
         }
-        System.out.println("Roundtrip: " + roundTrip);
+        System.out.println("Round trip: " + roundTrip);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if (roundTrip.equals("Y")) {
