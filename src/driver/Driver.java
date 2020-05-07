@@ -125,10 +125,10 @@ public class Driver {
 			// Seating
 			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 			for (Flight selected : selectedFlights) {
-				System.out.print("["+ selected.getSeating().getTotalCoach() +"] Coach seating ticket price for flight " + selected.getNumber() + ": ");
+				System.out.print("["+ selected.getSeating().getTotalCoach() +"/" + selected.getAirplane().getCoachSeats() + " reserved] Coach seating ticket price for flight " + selected.getNumber() + ": ");
 				System.out.print(currencyFormatter.format(selected.getSeating().getCoachPrice()));
 				System.out.println();
-				System.out.print("["+ selected.getSeating().getTotalFirstClass() +"] First class ticket price for flight " + selected.getNumber() + ": ");
+				System.out.print("["+ selected.getSeating().getTotalFirstClass() +"/" + selected.getAirplane().getFirstClassSeats() + " reserved] First class ticket price for flight " + selected.getNumber() + ": ");
 				System.out.print(currencyFormatter.format(selected.getSeating().getFirstClassPrice()));
 				System.out.println();
 			}
@@ -141,9 +141,17 @@ public class Driver {
 				// TODO: confirmation
 				String selectedSeating = seating.toLowerCase();
 				if (selectedSeating.equals("coach")) {
-					reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+					if (selected.getSeating().getTotalCoach() < selected.getAirplane().getCoachSeats()) {
+						reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+					} else {
+						System.out.println("Not enough seats available. Please select another seat type: ");
+					}
 				} else {
-					reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+					if (selected.getSeating().getTotalFirstClass() < selected.getAirplane().getFirstClassSeats()) {
+						reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+					} else {
+						System.out.println("Not enough seats available. Please select another seat type: ");
+					}
 				}
 			}
 			if (reservedSeat) {
@@ -201,10 +209,10 @@ public class Driver {
 
 						// Seating
 						for (Flight selected : selectedReturnFlights) {
-							System.out.print("["+ selected.getSeating().getTotalCoach() +"] Coach seating ticket price for returning flight " + selected.getNumber() + ": ");
+							System.out.print("["+ selected.getSeating().getTotalCoach() +"/" + selected.getAirplane().getCoachSeats() + " reserved] Coach seating ticket price for flight " + selected.getNumber() + ": ");
 							System.out.print(currencyFormatter.format(selected.getSeating().getCoachPrice()));
 							System.out.println();
-							System.out.print("["+ selected.getSeating().getTotalFirstClass() +"] First class ticket price for flight " + selected.getNumber() + ": ");
+							System.out.print("["+ selected.getSeating().getTotalFirstClass() +"/" + selected.getAirplane().getFirstClassSeats() + " reserved] First class ticket price for flight " + selected.getNumber() + ": ");
 							System.out.print(currencyFormatter.format(selected.getSeating().getFirstClassPrice()));
 							System.out.println();
 						}
