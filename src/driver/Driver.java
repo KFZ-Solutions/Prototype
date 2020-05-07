@@ -16,6 +16,7 @@ import flight.Departure;
 import flight.Flight;
 import flight.Flights;
 import trip.Trip;
+import utils.FlightUtils;
 import utils.InputReader;
 
 /**
@@ -91,16 +92,23 @@ public class Driver {
 			System.out.println("Direct flights to " + trip.getArrivalAirportCode() + ":");
 			for (int i=1; i<=oneConnection.size(); i++) {
 				List<Flight> flights = oneConnection.get(i);
-				searchFlightsResult.put(++resultCount, flights);
-				System.out.println("Flight " + resultCount + ":");
+				if (!FlightUtils.flightsHasAvailableSeat(flights)) {
+					continue;
+				}
 				for (Flight flight : flights) {
 					System.out.println("\t" + flight.toString());
 				}
+				searchFlightsResult.put(++resultCount, flights);
+				System.out.println("Flight " + resultCount + ":");
+
 			}
 
 			System.out.println("Two-connection flights to " + trip.getArrivalAirportCode() + ":");
 			for (int i=1; i<=twoConnections.size(); i++) {
 				List<Flight> flights = twoConnections.get(i);
+				if (!FlightUtils.flightsHasAvailableSeat(flights)) {
+					continue;
+				}
 				searchFlightsResult.put(++resultCount, flights);
 				System.out.println("Flight " + resultCount + ":");
 				for (Flight flight : flights) {
@@ -111,6 +119,9 @@ public class Driver {
 			System.out.println("Three-connection flights to " + trip.getArrivalAirportCode() + ":");
 			for (int i=1; i<=threeConnections.size(); i++) {
 				List<Flight> flights = threeConnections.get(i);
+				if (!FlightUtils.flightsHasAvailableSeat(flights)) {
+					continue;
+				}
 				searchFlightsResult.put(++resultCount, flights);
 				System.out.println("Flight " + resultCount + ":");
 				for (Flight flight : flights) {
@@ -176,6 +187,9 @@ public class Driver {
 						System.out.println("Direct returning flights to " + trip.getDepartingAirportCode() + ":");
 						for (int i=1; i<=oneConnectionReturn.size(); i++) {
 							List<Flight> flights = oneConnectionReturn.get(i);
+							if (!FlightUtils.flightsHasAvailableSeat(flights)) {
+								continue;
+							}
 							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
@@ -186,6 +200,9 @@ public class Driver {
 						System.out.println("Two-connection returning flights to " + trip.getDepartingAirportCode() + ":");
 						for (int i=1; i<=twoConnectionsReturn.size(); i++) {
 							List<Flight> flights = twoConnectionsReturn.get(i);
+							if (!FlightUtils.flightsHasAvailableSeat(flights)) {
+								continue;
+							}
 							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
@@ -196,6 +213,9 @@ public class Driver {
 						System.out.println("Three-connection returning flights to " + trip.getDepartingAirportCode() + ":");
 						for (int i=1; i<=threeConnectionsReturn.size(); i++) {
 							List<Flight> flights = threeConnectionsReturn.get(i);
+							if (!FlightUtils.flightsHasAvailableSeat(flights)) {
+								continue;
+							}
 							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
