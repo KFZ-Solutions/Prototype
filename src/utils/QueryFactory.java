@@ -28,6 +28,10 @@ public class QueryFactory {
 	public static String getDepartingFlights(String teamName, String airportCode, String day) {
 		return "?team=" + teamName + "&action=list&list_type=departing&airport=" + airportCode + "&day=" + day;
 	}
+
+	public static String reserveSeat(String teamName, String xmlFlights) {
+		return "team=" + teamName + "&action=buyTickets&flightData=" + xmlFlights;
+	}
 	
 	/**
 	 * Lock the server database so updates can be written

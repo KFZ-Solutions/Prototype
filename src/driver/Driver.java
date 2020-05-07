@@ -3,6 +3,7 @@
  */
 package driver;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -84,7 +85,7 @@ public class Driver {
 			// Loop through each map (of the 3) and output the key of each entry followed by the entry values.
 
 			Map<Integer, List<Flight>> searchFlightsResult = new HashMap<>();
-			Integer resultCount = 0;
+			int resultCount = 0;
 
 			System.out.println("DIRECT:");
 			for (int i=1; i<=oneConnection.size(); i++) {
@@ -119,6 +120,30 @@ public class Driver {
 			List<Flight> selectedFlights = InputReader.readFlightSelection(searchFlightsResult);
 			System.out.println("Your selected Flight is:");
 			System.out.println(selectedFlights.toString());
+
+			// Seating
+			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+			for (Flight selected : selectedFlights) {
+				System.out.print("["+ selected.getSeating().getTotalCoach() +"] Coach seating ticket price for flight " + selected.getNumber() + ": ");
+				System.out.print(currencyFormatter.format(selected.getSeating().getCoachPrice()));
+				System.out.println();
+				System.out.print("["+ selected.getSeating().getTotalFirstClass() +"] First class ticket price for flight " + selected.getNumber() + ": ");
+				System.out.print(currencyFormatter.format(selected.getSeating().getFirstClassPrice()));
+				System.out.println();
+			}
+
+			System.out.println();
+			for (Flight selected : selectedFlights) {
+				System.out.println("Please select seating for flight " + selected.getNumber() + ": ");
+				String seating = InputReader.readSeating();
+				// TODO: confirmation
+				String selectedSeating = seating.toLowerCase();
+				if (selectedSeating.equals("coach")) {
+					ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+				} else {
+					ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+				}
+			}
 
 		} else {
 			System.out.println("No flights to " + trip.getArrivalAirportCode() + " found for date " + trip.getDepartureDate() + ".");

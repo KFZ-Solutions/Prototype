@@ -7,7 +7,6 @@ import airplane.Airplanes;
 import airport.Airports;
 import flight.Flight;
 import flight.Flights;
-import trip.Trip;
 import utils.QueryFactory;
 import utils.TimeUtils;
 
@@ -16,7 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.*;
-import java.time.*;
 
 
 /**
@@ -290,8 +288,7 @@ public enum ServerInterface {
 		Map<Integer, List<Flight>> finalTwoConnections = new HashMap<>();
 		Map<Integer,List<Flight>> finalThreeConnections = new HashMap<>();
 
-		// Duplicate elimination
-		// Check layover time & time conversion
+		// TODO: Time conversion
 		List<Flight> oneConnectionFlights = firstConnectionMap.get(arrivalAirportCode);
 		List<Flight> twoConnectionFlights = secondConnectionMap.get(arrivalAirportCode);
 		List<Flight> threeConnectionFlights = thirdConnectionMap.get(arrivalAirportCode);
@@ -419,10 +416,63 @@ public enum ServerInterface {
 	/**
 	 * This method will reserve a seat based on the booking object provided
 	 * @param teamName
-	 * @param booking
+	 * @param flight
+	 * @param seatType
+	 * @return
 	 */
-	public void reserveSeat(String teamName, Trip booking) {
+	public boolean reserveSeat(String teamName, Flight flight, String seatType) {
+		URL url;
+		HttpURLConnection connection;
 
+		try {
+
+			/**
+			 * <Flights>
+			 *     <Flight number=“DDDDD” seating=“SEAT_TYPE”/>
+			 *     <Flight number=“DDDDD” seating=“SEAT_TYPE”/>
+			 * </Flights>
+			 */
+			String flightsXML = "<Flights>";
+			flightsXML += "<Flight number=\"" + flight.getNumber() + "\" seating=\"" + seatType + "\" />";
+			flightsXML += "</Flights>";
+
+			ServerInterface.INSTANCE.lock(teamName);
+
+			String params = QueryFactory.reserveSeat(teamName, flightsXML);
+			url = new URL(mUrlBase);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("User-Agent", teamName);
+			connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			connection.setRequestProperty("Content-Type", "application/xml; utf-8");
+
+			connection.setDoOutput(true);
+
+			DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
+			writer.writeBytes(params);
+			writer.flush();
+			writer.close();
+
+			int responseCode = connection.getResponseCode();
+			System.out.println("\nSending 'POST' to lock database");
+			System.out.println(("\nResponse Code : " + responseCode));
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String line;
+			StringBuilder response = new StringBuilder();
+
+			while ((line = in.readLine()) != null) {
+				response.append(line);
+			}
+			in.close();
+
+			System.out.println(response.toString());
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	/**

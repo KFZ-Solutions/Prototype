@@ -75,10 +75,14 @@ public class InputReader {
 
         System.out.print("Please enter the flights number you want: ");
         String flightsNumber = scanner.nextLine().replaceAll("\\s+","");
-        System.out.print("You picked flights number: " + flightsNumber);
+        System.out.println("You picked flights number: " + flightsNumber);
 
         List<Flight> selectedFlights = searchFlightsResult.get(Integer.parseInt(flightsNumber));
         return selectedFlights;
     }
 
+    public static String readSeating() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
 }
