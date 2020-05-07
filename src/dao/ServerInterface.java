@@ -3,6 +3,7 @@
  */
 package dao;
 
+import airplane.Airplane;
 import airplane.Airplanes;
 import airport.Airports;
 import flight.Flight;
@@ -28,8 +29,18 @@ import java.util.*;
  */
 public enum ServerInterface {
 	INSTANCE;
-	
-	/** 
+
+	private Airplanes airplanesAvailable;
+
+	public Airplanes getAirplanesAvailable() {
+		return airplanesAvailable;
+	}
+
+	public void setAirplanesAvailable(Airplanes airplanesAvailable) {
+		this.airplanesAvailable = airplanesAvailable;
+	}
+
+	/**
 	 * mUrlBase is the Universal Resource Locator (web address) of the CS509 reservation server
 	 */
 	private final String mUrlBase = "http://cs509.cs.wpi.edu:8181/CS509.server/ReservationSystem";

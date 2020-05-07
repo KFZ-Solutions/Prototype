@@ -1,5 +1,7 @@
 package airplane;
 
+import dao.ServerInterface;
+
 public class Airplane {
     String manufacturer;
     String model;
@@ -8,6 +10,15 @@ public class Airplane {
 
     public Airplane(String airplane) {
         // TODO: query the airplanes database and fill in the data
+        Airplanes airplanesAvailable = ServerInterface.INSTANCE.getAirplanesAvailable();
+        for (Airplane a : airplanesAvailable) {
+            if (airplane.equalsIgnoreCase(a.model)) {
+                this.manufacturer = a.getManufacturer();
+                this.model = a.getModel();
+                this.firstClassSeats = a.getFirstClassSeats();
+                this.coachSeats = a.getCoachSeats();
+            }
+        }
     }
 
     public Airplane(String manufacturer, String model, int firstClassSeats, int coachSeats) {

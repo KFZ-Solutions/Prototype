@@ -61,6 +61,7 @@ public class Driver {
 
 		// Try to get a list of airplanes
 		Airplanes airplanes = ServerInterface.INSTANCE.getAirplanes(teamName);
+		ServerInterface.INSTANCE.setAirplanesAvailable(airplanes);
 		for (Airplane airplane : airplanes) {
 			System.out.println(airplane.toString());
 		}
@@ -91,7 +92,7 @@ public class Driver {
 			for (int i=1; i<=oneConnection.size(); i++) {
 				List<Flight> flights = oneConnection.get(i);
 				searchFlightsResult.put(++resultCount, flights);
-				System.out.println("Flight " + i + ":");
+				System.out.println("Flight " + resultCount + ":");
 				for (Flight flight : flights) {
 					System.out.println("\t" + flight.toString());
 				}
@@ -101,7 +102,7 @@ public class Driver {
 			for (int i=1; i<=twoConnections.size(); i++) {
 				List<Flight> flights = twoConnections.get(i);
 				searchFlightsResult.put(++resultCount, flights);
-				System.out.println("Flight " + i + ":");
+				System.out.println("Flight " + resultCount + ":");
 				for (Flight flight : flights) {
 					System.out.println("\t" + flight.toString());
 				}
@@ -111,7 +112,7 @@ public class Driver {
 			for (int i=1; i<=threeConnections.size(); i++) {
 				List<Flight> flights = threeConnections.get(i);
 				searchFlightsResult.put(++resultCount, flights);
-				System.out.println("Flight " + i + ":");
+				System.out.println("Flight " + resultCount + ":");
 				for (Flight flight : flights) {
 					System.out.println("\t" + flight.toString());
 				}
@@ -168,7 +169,7 @@ public class Driver {
 						for (int i=1; i<=oneConnectionReturn.size(); i++) {
 							List<Flight> flights = oneConnectionReturn.get(i);
 							searchReturnFlightsResult.put(++returnResultCount, flights);
-							System.out.println("Flight " + i + ":");
+							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
 								System.out.println("\t" + flight.toString());
 							}
@@ -178,7 +179,7 @@ public class Driver {
 						for (int i=1; i<=twoConnectionsReturn.size(); i++) {
 							List<Flight> flights = twoConnectionsReturn.get(i);
 							searchReturnFlightsResult.put(++returnResultCount, flights);
-							System.out.println("Flight " + i + ":");
+							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
 								System.out.println("\t" + flight.toString());
 							}
@@ -188,7 +189,7 @@ public class Driver {
 						for (int i=1; i<=threeConnectionsReturn.size(); i++) {
 							List<Flight> flights = threeConnectionsReturn.get(i);
 							searchReturnFlightsResult.put(++returnResultCount, flights);
-							System.out.println("Flight " + i + ":");
+							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
 								System.out.println("\t" + flight.toString());
 							}
@@ -198,6 +199,33 @@ public class Driver {
 						System.out.println("Your selected returning Flight is:");
 						System.out.println(selectedReturnFlights.toString());
 
+						// Seating
+						for (Flight selected : selectedReturnFlights) {
+							System.out.print("["+ selected.getSeating().getTotalCoach() +"] Coach seating ticket price for returning flight " + selected.getNumber() + ": ");
+							System.out.print(currencyFormatter.format(selected.getSeating().getCoachPrice()));
+							System.out.println();
+							System.out.print("["+ selected.getSeating().getTotalFirstClass() +"] First class ticket price for flight " + selected.getNumber() + ": ");
+							System.out.print(currencyFormatter.format(selected.getSeating().getFirstClassPrice()));
+							System.out.println();
+						}
+
+						System.out.println();
+						boolean reservedReturningSeat = false;
+						for (Flight selected : selectedReturnFlights) {
+							System.out.println("Please select seating for returning flight " + selected.getNumber() + ": ");
+							String seating = InputReader.readSeating();
+							// TODO: confirmation
+							String selectedSeating = seating.toLowerCase();
+							if (selectedSeating.equals("coach")) {
+								reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+							} else {
+								reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+							}
+						}
+
+						if (reservedReturningSeat) {
+							System.out.println("Seat reserved!");
+						}
 					}
 				}
 			}
