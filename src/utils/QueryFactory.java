@@ -29,8 +29,8 @@ public class QueryFactory {
 		return "?team=" + teamName + "&action=list&list_type=departing&airport=" + airportCode + "&day=" + day;
 	}
 
-	public static String reserveSeat(String teamName, String xmlFlights) {
-		return "team=" + teamName + "&action=buyTickets&flightData=" + xmlFlights;
+	public static String reserveSeat(String teamName, StringBuffer xmlFlights) {
+		return "team=" + teamName + "&action=buyTickets&flightData=" + xmlFlights.toString();
 	}
 	
 	/**

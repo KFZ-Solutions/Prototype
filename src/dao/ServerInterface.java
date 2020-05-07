@@ -432,19 +432,21 @@ public enum ServerInterface {
 			 *     <Flight number=“DDDDD” seating=“SEAT_TYPE”/>
 			 * </Flights>
 			 */
-			String flightsXML = "<Flights>";
-			flightsXML += "<Flight number=\"" + flight.getNumber() + "\" seating=\"" + seatType + "\" />";
-			flightsXML += "</Flights>";
+			StringBuffer flightsXML = new StringBuffer();
+			flightsXML.append("<Flights>")
+					.append("<Flight number=\"")
+					.append(flight.getNumber())
+					.append("\" seating=\"")
+					.append(seatType).append("\" />")
+					.append("</Flights>");
 
 			ServerInterface.INSTANCE.lock(teamName);
 
 			String params = QueryFactory.reserveSeat(teamName, flightsXML);
+			System.out.println("Seding: " + params);
 			url = new URL(mUrlBase);
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
-			connection.setRequestProperty("User-Agent", teamName);
-			connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-			connection.setRequestProperty("Content-Type", "application/xml; utf-8");
 
 			connection.setDoOutput(true);
 
@@ -459,7 +461,7 @@ public enum ServerInterface {
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String line;
-			StringBuilder response = new StringBuilder();
+			StringBuffer response = new StringBuffer();
 
 			while ((line = in.readLine()) != null) {
 				response.append(line);
