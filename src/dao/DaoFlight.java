@@ -107,8 +107,8 @@ public class DaoFlight {
 //        System.out.println("-----------------------");
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm");
-        departure = new Departure(departureCode, sdf.parse(departureDate));
-        arrival = new Arrival(arrivalCode, sdf.parse(arrivalDate));
+        departure = new Departure(departureCode, sdf.parse(departureDate), departureDate);
+        arrival = new Arrival(arrivalCode, sdf.parse(arrivalDate), arrivalDate);
         seating = new SeatClass(airplane, firstClassPrice, coachPrice, totalFirstClass, totalCoach);
 
         return new Flight(new Airplane(airplane), flightDuration, number, departure, arrival, seating);

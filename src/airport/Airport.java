@@ -27,13 +27,13 @@ public class Airport implements Comparable<Airport>, Comparator<Airport> {
 	private String mName;              
 	
 	/** Three character code of the airport */
-	private String mCode;              
+	public String mCode;
 	
 	/** Latitude of airport in decimal format */
-	private double mLatitude;          
+	public double mLatitude;
 	
 	/** Longitude of the airport in decimal format */
-	private double mLongitude;         
+	public double mLongitude;
 	
 	/**
 	 * Default constructor

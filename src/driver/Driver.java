@@ -4,6 +4,7 @@
 package driver;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -42,7 +43,7 @@ public class Driver {
 	 * 
 	 * @param args is the arguments passed to java vm in format of "CS509.sample teamName" where teamName is a valid team
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		if (args.length != 1) {
 			System.err.println("usage: CS509.sample teamName");
 			System.exit(-1);
@@ -96,6 +97,7 @@ public class Driver {
 					continue;
 				}
 				for (Flight flight : flights) {
+					FlightUtils.convertFlightTime(flight, airports);
 					System.out.println("\t" + flight.toString());
 				}
 				searchFlightsResult.put(++resultCount, flights);
@@ -112,6 +114,7 @@ public class Driver {
 				searchFlightsResult.put(++resultCount, flights);
 				System.out.println("Flight " + resultCount + ":");
 				for (Flight flight : flights) {
+					FlightUtils.convertFlightTime(flight, airports);
 					System.out.println("\t" + flight.toString());
 				}
 			}
@@ -125,6 +128,7 @@ public class Driver {
 				searchFlightsResult.put(++resultCount, flights);
 				System.out.println("Flight " + resultCount + ":");
 				for (Flight flight : flights) {
+					FlightUtils.convertFlightTime(flight, airports);
 					System.out.println("\t" + flight.toString());
 				}
 			}
@@ -193,6 +197,7 @@ public class Driver {
 							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
+								FlightUtils.convertFlightTime(flight, airports);
 								System.out.println("\t" + flight.toString());
 							}
 						}
@@ -206,6 +211,7 @@ public class Driver {
 							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
+								FlightUtils.convertFlightTime(flight, airports);
 								System.out.println("\t" + flight.toString());
 							}
 						}
@@ -219,6 +225,7 @@ public class Driver {
 							searchReturnFlightsResult.put(++returnResultCount, flights);
 							System.out.println("Flight " + returnResultCount + ":");
 							for (Flight flight : flights) {
+								FlightUtils.convertFlightTime(flight, airports);
 								System.out.println("\t" + flight.toString());
 							}
 						}

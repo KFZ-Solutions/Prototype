@@ -53,6 +53,10 @@ public class Flight {
         return seating;
     }
 
+    public void setDepature(Departure depature) { this.departure = depature; }
+
+    public void setArrival(Arrival arrival) { this.arrival = arrival; }
+
     @Override
     public String toString() {
         return "Flight {" +
