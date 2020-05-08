@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 
 
 public class InputUtilsTest {
@@ -84,19 +84,4 @@ public class InputUtilsTest {
         assertEquals(Boolean.FALSE, result5);
     }
 
-    @Test
-    public void testReadTrip() {
-        String data = "BOS\r\nSFO\r\n2020-05-10\r\nN\r\n";
-        System.setIn(new ByteArrayInputStream(data.getBytes()));
-        InputReader.readTrip(new ArrayList<>() {{
-            add("BOS");
-            add("SFO");
-        }});
-        assertTrue(true); // if we reach this statement, the test has passed
-    }
-
-//    @Test
-//    public void testReadFlightSelectionOrOptions() {
-//
-//    }
 }
