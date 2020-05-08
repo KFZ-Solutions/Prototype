@@ -2,8 +2,11 @@ package tests;
 import airport.Airport;
 import airport.Airports;
 import org.junit.Test;
+import utils.InputReader;
 import utils.InputUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -81,4 +84,20 @@ public class InputValidationTest {
         Boolean result5 = InputUtils.YOrNInput(invalidString3);
         assertEquals(Boolean.FALSE, result5);
     }
+
+    @Test
+    public void testReadTrip() {
+        String data = "BOS\r\nSFO\r\n2020-05-10\r\nN\r\n";
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        InputReader.readTrip(new ArrayList<>() {{
+            add("BOS");
+            add("SFO");
+        }});
+        assertTrue(true); // if we reach this statement, the test has passed
+    }
+
+//    @Test
+//    public void testReadFlightSelectionOrOptions() {
+//
+//    }
 }
