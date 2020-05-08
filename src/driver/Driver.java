@@ -13,7 +13,6 @@ import airplane.Airplanes;
 import airport.Airport;
 import airport.Airports;
 import dao.ServerInterface;
-import flight.Departure;
 import flight.Flight;
 import flight.Flights;
 import trip.Trip;
@@ -102,7 +101,6 @@ public class Driver {
 				}
 				searchFlightsResult.put(++resultCount, flights);
 				System.out.println("Flight " + resultCount + ":");
-
 			}
 
 			System.out.println("Two-connection flights to " + trip.getArrivalAirportCode() + ":");
@@ -133,7 +131,7 @@ public class Driver {
 				}
 			}
 
-			List<Flight> selectedFlights = InputReader.readFlightSelection(searchFlightsResult);
+			List<Flight> selectedFlights = InputReader.readFlightSelectionOrOptions(searchFlightsResult, oneConnection, twoConnections, threeConnections);
 			System.out.println("Your selected Flight is:");
 			System.out.println(selectedFlights.toString());
 
@@ -159,13 +157,24 @@ public class Driver {
 					if (selected.getSeating().getTotalCoach() < selected.getAirplane().getCoachSeats()) {
 						reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
 					} else {
-						System.out.println("Not enough seats available. Please select another seat type: ");
+						System.out.println("Not enough seats available. Do you want to reserve a first class seat instead ('Y' or 'N')? ");
+						// TODO: ask user for 'Y' or 'N'
+						boolean yn = InputReader.readNY();
+						if (yn) {
+							// Book first class
+							reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+						}
 					}
 				} else {
 					if (selected.getSeating().getTotalFirstClass() < selected.getAirplane().getFirstClassSeats()) {
 						reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
 					} else {
-						System.out.println("Not enough seats available. Please select another seat type: ");
+						System.out.println("Not enough seats available. Do you want to reserve a coach seat instead ('Y' or 'N')? ");
+						// TODO: ask user for 'Y' or 'N'
+						boolean yn = InputReader.readNY();
+						if (yn) {
+							reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+						}
 					}
 				}
 			}
@@ -230,7 +239,7 @@ public class Driver {
 							}
 						}
 
-						List<Flight> selectedReturnFlights = InputReader.readFlightSelection(searchReturnFlightsResult);
+						List<Flight> selectedReturnFlights = InputReader.readFlightSelectionOrOptions(searchReturnFlightsResult, oneConnectionReturn, twoConnectionsReturn, threeConnectionsReturn);
 						System.out.println("Your selected returning Flight is:");
 						System.out.println(selectedReturnFlights.toString());
 
@@ -252,9 +261,28 @@ public class Driver {
 							// TODO: confirmation
 							String selectedSeating = seating.toLowerCase();
 							if (selectedSeating.equals("coach")) {
-								reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+								if (selected.getSeating().getTotalCoach() < selected.getAirplane().getCoachSeats()) {
+									reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+								} else {
+									System.out.println("Not enough seats available. Do you want to reserve a first class seat instead ('Y' or 'N')? ");
+									// TODO: ask user for 'Y' or 'N'
+									boolean yn = InputReader.readNY();
+									if (yn) {
+										// Book first class
+										reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+									}
+								}
 							} else {
-								reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+								if (selected.getSeating().getTotalFirstClass() < selected.getAirplane().getFirstClassSeats()) {
+									reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
+								} else {
+									System.out.println("Not enough seats available. Do you want to reserve a coach seat instead ('Y' or 'N')? ");
+									// TODO: ask user for 'Y' or 'N'
+									boolean yn = InputReader.readNY();
+									if (yn) {
+										reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
+									}
+ 								}
 							}
 						}
 

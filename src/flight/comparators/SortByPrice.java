@@ -4,7 +4,7 @@ import flight.Flight;
 
 import java.util.Comparator;
 
-class SortByPrice implements Comparator<Flight> {
+public class SortByPrice implements Comparator<Flight> {
     @Override
     public int compare(Flight flight1, Flight flight2) {
         Double coachPrice1 = flight1.getSeating().getCoachPrice();
