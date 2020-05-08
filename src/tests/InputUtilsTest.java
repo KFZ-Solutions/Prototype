@@ -1,16 +1,15 @@
 package tests;
-import airport.Airport;
-import airport.Airports;
+
 import org.junit.Test;
 import utils.InputUtils;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 
 
-public class InputValidationTest {
+public class InputUtilsTest {
 
     @Test
     public void testValidateAirportInput() {
