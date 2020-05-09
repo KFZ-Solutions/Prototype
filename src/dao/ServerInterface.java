@@ -107,6 +107,8 @@ public enum ServerInterface {
 
 	/**
 	 * This method will get the details of airplanes which includes available seating
+	 * @param teamName
+	 * @return collection of Airplanes from the server or null if error
 	 */
 	public Airplanes getAirplanes(String teamName) {
 		URL url;
@@ -157,6 +159,13 @@ public enum ServerInterface {
 		return airports;
 	}
 
+	/**
+	 * This method gets all the departing flight from an airport for the given day
+	 * @param teamName
+	 * @param airportCode
+	 * @param day
+	 * @return collection of flights from the server or null if error
+	 */
 	public Flights getDepartingFlights (String teamName, String airportCode, String day) {
 		URL url;
 		HttpURLConnection connection;
@@ -299,7 +308,6 @@ public enum ServerInterface {
 		Map<Integer, List<Flight>> finalTwoConnections = new HashMap<>();
 		Map<Integer,List<Flight>> finalThreeConnections = new HashMap<>();
 
-		// TODO: Time conversion
 		List<Flight> oneConnectionFlights = firstConnectionMap.get(arrivalAirportCode);
 		List<Flight> twoConnectionFlights = secondConnectionMap.get(arrivalAirportCode);
 		List<Flight> threeConnectionFlights = thirdConnectionMap.get(arrivalAirportCode);
@@ -429,7 +437,7 @@ public enum ServerInterface {
 	 * @param teamName
 	 * @param flight
 	 * @param seatType
-	 * @return
+	 * @return true if the seat was reserved and false if error
 	 */
 	public boolean reserveSeat(String teamName, Flight flight, String seatType) {
 		URL url;

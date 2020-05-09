@@ -44,6 +44,11 @@ public class DaoAirplane {
         return airplanes; // stub
     }
 
+    /**
+     * Parses the airplane node
+     * @param nodeFlight
+     * @return
+     */
     static private Airplane buildAirplane(Node nodeFlight) {
 
         String manufacturer;

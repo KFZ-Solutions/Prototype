@@ -14,6 +14,14 @@ import java.io.IOException;
 import java.io.StringReader;
 
 public class XMLFactory {
+    /**
+     * Builds a DOM tree from an XML string
+     *
+     * Parses the XML file and returns a DOM tree that can be processed
+     *
+     * @param xmlString XML String containing set of objects
+     * @return DOM tree from parsed XML or null if exception is caught
+     */
     static Document buildDomDoc (String xmlString) {
         /**
          * load the xml string into a DOM document and return the Document

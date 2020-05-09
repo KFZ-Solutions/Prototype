@@ -58,9 +58,18 @@ public class DaoFlight {
         return flights;
     }
 
+    /**
+     * Creates a Flight object from a DOM node
+     *
+     * Processes a DOM Node that describes a Flight and creates a Flight object from the information
+     * @param nodeFlight is a DOM Node describing a Flight
+     * @return Flight object created from the DOM Node representation of the Flight
+     *
+     * @pre nodeFlight is of format specified by CS509 server API
+     * @post airport object instantiated. Caller responsible for deallocating memory.
+     */
     static private Flight buildFlight (Node nodeFlight) throws ParseException {
-//        Airplane airplane;
-        String airplane; // TODO: need to replace with Airplane
+        String airplane;
 
         int flightDuration;
         int number;

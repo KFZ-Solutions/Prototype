@@ -28,17 +28,13 @@ import utils.InputReader;
 public class Driver {
 
 	/**
-	 * 1. Select a departure airport and arrival airport for their desired travel (90% done)
+	 * Entry point for CS509 sample code driver
+	 * 
+	 * This driver will:
+	 * 1. Select a departure airport and arrival airport for their desired travel
 	 * 2. The user will be able to use the client software to
 	 * reserve flights to travel one-way (from departure to destination)
 	 * with potentially up to 2 layovers
-	 */
-
-	/**
-	 * Entry point for CS509 sample code driver
-	 * 
-	 * This driver will retrieve the list of airports from the CS509 server and print the list 
-	 * to the console sorted by 3 character airport code
 	 * 
 	 * @param args is the arguments passed to java vm in format of "CS509.sample teamName" where teamName is a valid team
 	 */
@@ -151,14 +147,12 @@ public class Driver {
 			for (Flight selected : selectedFlights) {
 				System.out.println("Please select seating for flight " + selected.getNumber() + ": ");
 				String seating = InputReader.readSeating();
-				// TODO: confirmation
 				String selectedSeating = seating.toLowerCase();
 				if (selectedSeating.equals("coach")) {
 					if (selected.getSeating().getTotalCoach() < selected.getAirplane().getCoachSeats()) {
 						reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
 					} else {
 						System.out.println("Not enough seats available. Do you want to reserve a first class seat instead ('Y' or 'N')? ");
-						// TODO: ask user for 'Y' or 'N'
 						boolean yn = InputReader.readNY();
 						if (yn) {
 							// Book first class
@@ -170,7 +164,6 @@ public class Driver {
 						reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
 					} else {
 						System.out.println("Not enough seats available. Do you want to reserve a coach seat instead ('Y' or 'N')? ");
-						// TODO: ask user for 'Y' or 'N'
 						boolean yn = InputReader.readNY();
 						if (yn) {
 							reservedSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
@@ -258,14 +251,12 @@ public class Driver {
 						for (Flight selected : selectedReturnFlights) {
 							System.out.println("Please select seating for returning flight " + selected.getNumber() + ": ");
 							String seating = InputReader.readSeating();
-							// TODO: confirmation
 							String selectedSeating = seating.toLowerCase();
 							if (selectedSeating.equals("coach")) {
 								if (selected.getSeating().getTotalCoach() < selected.getAirplane().getCoachSeats()) {
 									reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");
 								} else {
 									System.out.println("Not enough seats available. Do you want to reserve a first class seat instead ('Y' or 'N')? ");
-									// TODO: ask user for 'Y' or 'N'
 									boolean yn = InputReader.readNY();
 									if (yn) {
 										// Book first class
@@ -277,7 +268,6 @@ public class Driver {
 									reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "FirstClass");
 								} else {
 									System.out.println("Not enough seats available. Do you want to reserve a coach seat instead ('Y' or 'N')? ");
-									// TODO: ask user for 'Y' or 'N'
 									boolean yn = InputReader.readNY();
 									if (yn) {
 										reservedReturningSeat = ServerInterface.INSTANCE.reserveSeat(teamName, selected, "Coach");

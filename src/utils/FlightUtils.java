@@ -28,6 +28,7 @@ public class FlightUtils {
         }
         return true;
     }
+
     /**
      * Convert flight departure and arrival time base on airport timezone
      *
