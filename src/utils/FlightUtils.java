@@ -16,6 +16,9 @@ import java.util.TimeZone;
 public class FlightUtils {
     /**
      * Check if flights has available seats
+     *
+     * @param flights A list of flights
+     * @return Boolean value that if flights has available seat or not
      */
     public static boolean flightsHasAvailableSeat(List<Flight> flights) {
         for (Flight flight : flights) {
@@ -26,7 +29,10 @@ public class FlightUtils {
         return true;
     }
     /**
-     * Convert flight time base on airport timezone
+     * Convert flight departure and arrival time base on airport timezone
+     *
+     * @param flight A flight that will be converted for its departure and arrival time
+     * @param airports A list of available airports contains airport data
      */
     public static void convertFlightTime(Flight flight, Airports airports) throws ParseException {
         Departure depature = flight.getDeparture();
@@ -60,11 +66,5 @@ public class FlightUtils {
         flight.setArrival(arrival);
 
         return;
-    }
-    /**
-     * Calculates total duration of flight
-     */
-    public int calcFlightDuration() {
-        return 0; // stub
     }
 }

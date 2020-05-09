@@ -3,10 +3,14 @@ package utils;
 import java.util.Date;
 
 public class TimeUtils {
-    public static Date revertGMTtoLocalTime() {
-        return new Date(); // stub
-    }
-
+    /**
+     * Calculate the time difference between two dates
+     *
+     * @param d1 From date
+     * @param d2 To date
+     *
+     * @return The time difference of the two dates
+     */
     public static long getHourDifference(Date d1, Date d2) {
         //in milliseconds
         long diff = d2.getTime() - d1.getTime();
