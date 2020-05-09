@@ -68,6 +68,14 @@ public class Driver {
 		System.out.println("---- Trip details ----");
 		System.out.println(trip.toString());
 
+		// Timeless response
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask(){
+			public void run() {
+				System.out.println("Loading results! Please wait.");
+			}
+		}, 3000);
+
 		// Query the server for those inputs
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 		Flights departingFlights = ServerInterface.INSTANCE.getDepartingFlights(teamName, trip.getDepartingAirportCode(), sdf.format(trip.getDepartureDate()));
