@@ -18,7 +18,7 @@ public class Trip {
     Date returnDate;
 
     /**
-     * Trip attributes 
+     * Trip attributes
      */
     /** departingAirportCode */
     String departingAirportCode;
